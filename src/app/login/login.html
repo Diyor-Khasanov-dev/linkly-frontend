@@ -1,0 +1,99 @@
+<div class="min-h-screen bg-bg text-ink font-body antialiased relative overflow-hidden">
+  <div class="auth-grid absolute inset-0 opacity-70" aria-hidden="true"></div>
+  <header class="relative z-10 border-b border-line bg-bg/[0.86] backdrop-blur-md">
+    <div class="max-w-[1180px] mx-auto px-6 h-19 flex items-center justify-between">
+      <a routerLink="/" class="flex items-center gap-1" aria-label="Linkly home">
+        <span class="font-display font-bold text-xl tracking-tight">Linkly</span
+        ><span class="font-mono text-xl text-accent font-medium">/</span>
+      </a>
+      <a
+        routerLink="/register"
+        class="inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-ink text-white hover:bg-[#2A2D36] hover:-translate-y-px transition-all"
+        >Create account</a
+      >
+    </div>
+  </header>
+
+  <main
+    class="relative z-10 max-w-[1180px] mx-auto px-6 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-[1fr_460px] gap-12 items-center"
+  >
+    <section>
+      <span
+        class="inline-flex items-center gap-2 font-mono text-[12.5px] text-ink-soft bg-surface border border-line rounded-full px-3.5 py-[7px] mb-7"
+      >
+        <span class="w-1.5 h-1.5 rounded-full bg-accent-2"></span> Demo workspace ready
+      </span>
+      <h1
+        class="font-display font-bold leading-[1.06] tracking-[-0.02em] text-[38px] sm:text-[48px] lg:text-[62px]"
+      >
+        Welcome back to <span class="text-accent">smarter</span><br />link tracking.
+      </h1>
+      <p class="mt-[22px] max-w-[520px] text-[17px] leading-relaxed text-ink-soft">
+        Sign in with the demo credentials and jump into the Linkly flow with the same clean, focused
+        interface from the landing page.
+      </p>
+      <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-[640px]">
+        <div class="bg-surface border border-line rounded-md2 p-5">
+          <p class="font-display font-bold text-[24px]">12.4k</p>
+          <p class="mt-1 font-mono text-xs text-ink-faint">clicks synced</p>
+        </div>
+        <div class="bg-surface border border-line rounded-md2 p-5">
+          <p class="font-display font-bold text-[24px]">327</p>
+          <p class="mt-1 font-mono text-xs text-ink-faint">today</p>
+        </div>
+        <div class="bg-surface border border-line rounded-md2 p-5">
+          <p class="font-display font-bold text-[24px]">99.9%</p>
+          <p class="mt-1 font-mono text-xs text-ink-faint">uptime</p>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="bg-bg border border-line rounded-lg2 p-2 shadow-[0_24px_80px_rgba(29,31,38,0.08)]"
+    >
+      <div class="bg-surface rounded-md2 p-7 sm:p-8">
+        <p class="font-mono text-xs tracking-[0.14em] uppercase text-accent font-medium">Log in</p>
+        <h2 class="mt-3 font-display font-bold text-[30px] tracking-[-0.015em]">
+          Access your dashboard
+        </h2>
+        <p class="mt-3 text-[15px] leading-relaxed text-ink-soft">
+          Use the demo account below to preview Linkly.
+        </p>
+
+        <div
+          class="mt-6 rounded-md2 border border-line bg-bg p-4 font-mono text-[13px] text-ink-soft"
+        >
+          <p><span class="text-ink font-semibold">Demo Email:</span> demo&#64;linkly.com</p>
+          <p class="mt-1"><span class="text-ink font-semibold">Demo Password:</span> demo123</p>
+        </div>
+
+        <form class="mt-7 flex flex-col gap-4" onsubmit="return false;">
+          <label class="flex flex-col gap-2 text-sm font-semibold text-ink"
+            >Email address<input
+              type="email"
+              value="demo@linkly.com"
+              class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm text-ink outline-none focus:border-accent"
+          /></label>
+          <label class="flex flex-col gap-2 text-sm font-semibold text-ink"
+            >Password<input
+              type="password"
+              value="demo123"
+              class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm text-ink outline-none focus:border-accent"
+          /></label>
+          <button
+            type="submit"
+            class="mt-2 inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-accent text-white hover:bg-accent-dark hover:-translate-y-px transition-all"
+          >
+            Log in with demo
+          </button>
+        </form>
+        <p class="mt-6 text-center text-sm text-ink-soft">
+          New to Linkly?
+          <a routerLink="/register" class="font-semibold text-accent hover:text-accent-dark"
+            >Create an account</a
+          >
+        </p>
+      </div>
+    </section>
+  </main>
+</div>

@@ -1,0 +1,26 @@
+:host {
+  display: block;
+}
+
+.loading-grid {
+  background-image:
+    linear-gradient(#e2e1da 1px, transparent 1px),
+    linear-gradient(90deg, #e2e1da 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 72% 64% at 50% 0%, #000 38%, transparent 88%);
+  mask-image: radial-gradient(ellipse 72% 64% at 50% 0%, #000 38%, transparent 88%);
+}
+
+.loading-bar {
+  animation: loadingPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+  0%,
+  100% {
+    transform: translateX(-55%);
+  }
+  50% {
+    transform: translateX(155%);
+  }
+}
