@@ -67,7 +67,7 @@
           <p class="mt-1"><span class="text-ink font-semibold">Demo Password:</span> demo123</p>
         </div>
 
-        <form class="mt-7 flex flex-col gap-4" onsubmit="return false;">
+        <form class="mt-7 flex flex-col gap-4" (submit)="loginWithDemo(); $event.preventDefault()">
           <label class="flex flex-col gap-2 text-sm font-semibold text-ink"
             >Email address<input
               type="email"
@@ -85,6 +85,7 @@
             class="mt-2 inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-accent text-white hover:bg-accent-dark hover:-translate-y-px transition-all"
           >
             Log in with demo
+            <span aria-hidden="true">→</span>
           </button>
         </form>
         <p class="mt-6 text-center text-sm text-ink-soft">

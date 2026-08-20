@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { authGuard } from './auth.guard';
+
 export const routes: Routes = [
   {
     path: '',
@@ -19,6 +21,7 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     title: 'Dashboard — Linkly',
+    canActivate: [authGuard],
     loadComponent: () => import('./dashboard/dashboard').then((component) => component.Dashboard),
   },
   {
