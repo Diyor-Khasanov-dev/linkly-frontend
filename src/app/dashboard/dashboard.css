@@ -1,3 +1,50 @@
 :host {
   display: block;
 }
+
+.dashboard-grid {
+  background-image:
+    linear-gradient(#e2e1da 1px, transparent 1px),
+    linear-gradient(90deg, #e2e1da 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 72% 64% at 50% 0%, #000 38%, transparent 88%);
+  mask-image: radial-gradient(ellipse 72% 64% at 50% 0%, #000 38%, transparent 88%);
+}
+
+.chart-bar {
+  flex: 1;
+  min-width: 0;
+  border-radius: 999px 999px 6px 6px;
+  background: linear-gradient(180deg, #ff8a72 0%, #ff5a3d 100%);
+  box-shadow: 0 12px 28px rgba(255, 90, 61, 0.22);
+}
+
+.link-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.25rem 1.75rem;
+}
+
+.link-row span {
+  font-weight: 700;
+}
+
+.link-row code {
+  color: #656874;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.link-row strong {
+  font-size: 0.925rem;
+}
+
+@media (max-width: 720px) {
+  .link-row {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    padding: 1.25rem;
+  }
+}
