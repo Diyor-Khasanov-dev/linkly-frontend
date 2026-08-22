@@ -65,6 +65,12 @@ export const routes: Routes = [
             (component) => component.ExpiringQrCodes,
           ),
       },
+      {
+        path: 'profile',
+        title: 'Profile — Linkly',
+        loadComponent: () =>
+          import('./dashboard/pages/profile').then((component) => component.Profile),
+      },
     ],
   },
   {
