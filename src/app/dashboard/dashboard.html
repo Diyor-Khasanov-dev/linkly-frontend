@@ -1,211 +1,158 @@
 <div class="min-h-screen bg-bg text-ink font-body antialiased relative overflow-hidden">
   <div class="dashboard-grid absolute inset-0 opacity-70" aria-hidden="true"></div>
 
-  <header class="relative z-10 border-b border-line bg-bg/[0.86] backdrop-blur-md">
-    <div class="max-w-[1180px] mx-auto px-6 h-19 flex items-center justify-between">
-      <a routerLink="/" class="flex items-center gap-1" aria-label="Linkly home">
+  <div class="relative z-10 flex min-h-screen">
+    <aside class="dashboard-sidebar">
+      <a routerLink="/" class="sidebar-brand" aria-label="Linkly home">
         <span class="font-display font-bold text-xl tracking-tight">Linkly</span
         ><span class="font-mono text-xl text-accent font-medium">/</span>
       </a>
-      <nav class="hidden lg:flex items-center gap-7">
-        <a href="#shortener" class="dashboard-nav-link">Shortener</a>
-        <a href="#qr" class="dashboard-nav-link">QR codes</a>
-        <a href="#saved" class="dashboard-nav-link">Saved links</a>
-        <a href="#analytics" class="dashboard-nav-link">Analytics</a>
-      </nav>
-      <div class="flex items-center gap-3">
-        <span
-          class="hidden sm:inline-flex items-center gap-2 font-mono text-[12.5px] text-ink-soft bg-surface border border-line rounded-full px-3.5 py-[7px]"
-        >
-          <span class="w-1.5 h-1.5 rounded-full bg-accent-2"></span> Demo workspace
-        </span>
-        <button
-          type="button"
-          (click)="logout()"
-          class="inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[18px] py-3 rounded-sm2 bg-ink text-white hover:bg-[#2A2D36] hover:-translate-y-px transition-all"
-        >
-          Log out
-        </button>
-      </div>
-    </div>
-  </header>
 
-  <main class="relative z-10 max-w-[1180px] mx-auto px-6 py-10 lg:py-14">
-    <section class="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-6 items-stretch">
-      <div
-        id="shortener"
-        class="bg-bg border border-line rounded-lg2 p-2 shadow-[0_24px_80px_rgba(29,31,38,0.08)]"
-      >
-        <div class="bg-surface rounded-md2 p-7 sm:p-8 h-full">
-          <p class="font-mono text-xs tracking-[0.14em] uppercase text-accent font-medium">
-            Link shortener
-          </p>
-          <h1
-            class="mt-3 font-display font-bold leading-[1.06] tracking-[-0.02em] text-[36px] sm:text-[46px] lg:text-[56px]"
-          >
-            Create, save, and track <span class="text-accent">every link</span>.
-          </h1>
-          <p class="mt-[18px] max-w-[560px] text-[16px] leading-relaxed text-ink-soft">
-            Demo dashboard template for shortening URLs, generating QR codes from the same link,
-            storing campaigns, and previewing performance analytics.
-          </p>
-
-          <form
-            class="mt-8 grid grid-cols-1 gap-3 bg-bg border border-line rounded-md2 p-3"
-            onsubmit="return false;"
-          >
-            <label class="font-mono text-xs text-ink-faint" for="long-url">Destination URL</label>
-            <div class="flex flex-col sm:flex-row gap-2">
-              <input
-                id="long-url"
-                type="url"
-                value="https://example.com/products/summer-sale/2026"
-                aria-label="URL to shorten"
-                class="flex-1 min-w-0 border border-line bg-surface outline-none px-3.5 py-3 rounded-sm2 font-mono text-sm text-ink placeholder:text-ink-faint"
-              />
-              <button type="submit" class="dashboard-primary-button">Shorten &amp; save</button>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input
-                type="text"
-                value="summer-sale"
-                aria-label="Custom alias"
-                class="dashboard-input"
-              />
-              <select class="dashboard-input" aria-label="Campaign folder">
-                <option>Campaign: Summer 2026</option>
-                <option>Campaign: Product Launch</option>
-              </select>
-            </div>
-          </form>
-
-          <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
-            <article class="dashboard-mini-card">
-              <span class="dashboard-mini-label">Short URL</span>
-              <strong>linkly.co/summer</strong>
-            </article>
-            <article class="dashboard-mini-card">
-              <span class="dashboard-mini-label">Status</span>
-              <strong class="text-accent-2">Saved</strong>
-            </article>
-            <article class="dashboard-mini-card">
-              <span class="dashboard-mini-label">QR ready</span>
-              <strong>PNG · SVG</strong>
-            </article>
-          </div>
-        </div>
-      </div>
-
-      <aside
-        id="qr"
-        class="bg-dark text-white rounded-lg2 p-7 sm:p-8 shadow-[0_24px_80px_rgba(29,31,38,0.12)]"
-      >
-        <div class="flex items-start justify-between gap-6">
-          <div>
-            <p class="font-mono text-xs tracking-[0.14em] uppercase text-white/55">
-              QR code generator
-            </p>
-            <p class="mt-3 font-display font-bold text-[38px] tracking-[-0.03em]">Scan ready</p>
-            <p class="mt-2 text-sm leading-relaxed text-white/60">
-              QR code is generated from the saved short link and inherits the same click analytics.
-            </p>
-          </div>
-          <div class="qr-preview" aria-label="Generated QR code preview">
-            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-          </div>
-        </div>
-        <div class="mt-8 grid grid-cols-2 gap-3">
-          <button class="dashboard-dark-button">Download PNG</button>
-          <button class="dashboard-dark-button">Copy link</button>
-        </div>
-        <div class="mt-6 rounded-md2 bg-white/8 border border-white/10 p-4">
-          <p class="font-mono text-xs text-white/45">QR destination</p>
-          <p class="mt-2 font-mono text-sm text-white truncate">https://linkly.co/summer</p>
-        </div>
-      </aside>
-    </section>
-
-    <section id="analytics" class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-5">
-      <article class="dashboard-stat-card">
-        <p class="font-mono text-xs text-ink-faint">Saved links</p>
-        <p class="mt-2 font-display font-bold text-[32px]">248</p>
-        <p class="mt-3 text-sm text-accent-2 font-semibold">↑ 18% this month</p>
-      </article>
-      <article class="dashboard-stat-card">
-        <p class="font-mono text-xs text-ink-faint">Link clicks</p>
-        <p class="mt-2 font-display font-bold text-[32px]">12,482</p>
-        <p class="mt-3 text-sm text-accent-2 font-semibold">↑ 24% this month</p>
-      </article>
-      <article class="dashboard-stat-card">
-        <p class="font-mono text-xs text-ink-faint">QR scans</p>
-        <p class="mt-2 font-display font-bold text-[32px]">3,910</p>
-        <p class="mt-3 text-sm text-accent-2 font-semibold">↑ 9% this month</p>
-      </article>
-      <article class="dashboard-stat-card">
-        <p class="font-mono text-xs text-ink-faint">Conversion rate</p>
-        <p class="mt-2 font-display font-bold text-[32px]">7.8%</p>
-        <p class="mt-3 text-sm text-ink-soft">Demo estimate</p>
-      </article>
-    </section>
-
-    <section class="mt-6 grid grid-cols-1 lg:grid-cols-[0.92fr_1.08fr] gap-6">
-      <article class="dashboard-panel">
-        <div class="dashboard-panel-header">
-          <div>
-            <p class="dashboard-eyebrow">Link click analytics</p>
-            <h2 class="dashboard-panel-title">Clicks by day</h2>
-          </div>
-          <span class="dashboard-pill">Last 7 days</span>
-        </div>
-        <div class="mt-8 h-52 flex items-end gap-3" aria-label="Click chart preview">
-          <span class="chart-bar h-[42%]"></span><span class="chart-bar h-[58%]"></span
-          ><span class="chart-bar h-[36%]"></span><span class="chart-bar h-[72%]"></span
-          ><span class="chart-bar h-[64%]"></span><span class="chart-bar h-[88%]"></span
-          ><span class="chart-bar h-[76%]"></span><span class="chart-bar h-[96%]"></span>
-        </div>
-      </article>
-
-      <article class="dashboard-panel">
-        <div class="dashboard-panel-header">
-          <div>
-            <p class="dashboard-eyebrow">QR code analytics</p>
-            <h2 class="dashboard-panel-title">Scans by source</h2>
-          </div>
-          <span class="dashboard-pill">Demo data</span>
-        </div>
-        <div class="mt-7 space-y-5">
-          <div class="source-row"><span>In-store posters</span><b>1,420 scans</b><i class="w-[82%]"></i></div>
-          <div class="source-row"><span>Event flyers</span><b>980 scans</b><i class="w-[58%]"></i></div>
-          <div class="source-row"><span>Packaging</span><b>740 scans</b><i class="w-[44%]"></i></div>
-          <div class="source-row"><span>Business cards</span><b>312 scans</b><i class="w-[24%]"></i></div>
-        </div>
-      </article>
-    </section>
-
-    <section id="saved" class="mt-6 bg-surface border border-line rounded-lg2 overflow-hidden">
-      <div class="p-6 sm:p-7 border-b border-line flex items-center justify-between gap-4">
+      <div class="sidebar-workspace">
+        <span class="status-dot"></span>
         <div>
-          <p class="dashboard-eyebrow">Saved links</p>
-          <h2 class="dashboard-panel-title">Campaign library</h2>
-        </div>
-        <button class="hidden sm:inline-flex dashboard-secondary-button">Export report</button>
-      </div>
-      <div class="divide-y divide-line">
-        <div class="link-row">
-          <span>Summer sale</span><code>linkly.co/summer</code><strong>4,821 clicks</strong
-          ><em>1,420 QR scans</em>
-        </div>
-        <div class="link-row">
-          <span>Launch notes</span><code>linkly.co/notes</code><strong>2,094 clicks</strong
-          ><em>624 QR scans</em>
-        </div>
-        <div class="link-row">
-          <span>Partner deck</span><code>linkly.co/deck</code><strong>1,482 clicks</strong
-          ><em>312 QR scans</em>
+          <strong>Demo workspace</strong>
+          <p>Professional preview</p>
         </div>
       </div>
-    </section>
-  </main>
+
+      <nav class="sidebar-nav" aria-label="Dashboard demo pages">
+        <a routerLink="/dashboard/short-urls" routerLinkActive="is-active" class="sidebar-link">
+          <span class="sidebar-icon">↗</span><span>Short URLs</span><em>248</em>
+        </a>
+        <a routerLink="/dashboard/qr-code" routerLinkActive="is-active" class="sidebar-link">
+          <span class="sidebar-icon">▦</span><span>QR Code</span><em>96</em>
+        </a>
+        <a routerLink="/dashboard/analytics-link" routerLinkActive="is-active" class="sidebar-link">
+          <span class="sidebar-icon">⌁</span><span>Analytics Link</span><em>12.4K</em>
+        </a>
+        <a
+          routerLink="/dashboard/analytics-qr-code"
+          routerLinkActive="is-active"
+          class="sidebar-link"
+        >
+          <span class="sidebar-icon">◫</span><span>Analytics QR Code</span><em>3.9K</em>
+        </a>
+        <a routerLink="/dashboard/expiring-links" routerLinkActive="is-active" class="sidebar-link">
+          <span class="sidebar-icon">⏱</span><span>Expiring Links</span><em>17</em>
+        </a>
+        <a
+          routerLink="/dashboard/expiring-qr-codes"
+          routerLinkActive="is-active"
+          class="sidebar-link"
+        >
+          <span class="sidebar-icon">⌛</span><span>Expiring QR Codes</span><em>11</em>
+        </a>
+      </nav>
+
+      <div class="sidebar-upgrade-card">
+        <p>Demo version</p>
+        <strong>All pages are crafted as realistic product previews.</strong>
+      </div>
+    </aside>
+
+    <div class="dashboard-content">
+      <header class="dashboard-topbar">
+        <div>
+          <p class="font-mono text-xs tracking-[0.14em] uppercase text-accent font-medium">
+            Linkly cockpit
+          </p>
+          <h2>Dashboard</h2>
+        </div>
+        <button type="button" (click)="logout()" class="dashboard-logout-button">Log out</button>
+      </header>
+
+      <main class="dashboard-main">
+        <section class="grid grid-cols-1 xl:grid-cols-[1.05fr_0.95fr] gap-6 items-stretch">
+          <div
+            id="shortener"
+            class="bg-bg border border-line rounded-lg2 p-2 shadow-[0_24px_80px_rgba(29,31,38,0.08)]"
+          >
+            <div class="bg-surface rounded-md2 p-7 sm:p-8 h-full">
+              <p class="font-mono text-xs tracking-[0.14em] uppercase text-accent font-medium">
+                Link shortener
+              </p>
+              <h1
+                class="mt-3 font-display font-bold leading-[1.06] tracking-[-0.02em] text-[36px] sm:text-[46px] xl:text-[56px]"
+              >
+                Create, save, and track <span class="text-accent">every link</span>.
+              </h1>
+              <p class="mt-[18px] max-w-[560px] text-[16px] leading-relaxed text-ink-soft">
+                Demo dashboard template for shortening URLs, generating QR codes from the same link,
+                storing campaigns, and previewing performance analytics.
+              </p>
+              <form
+                class="mt-8 grid grid-cols-1 gap-3 bg-bg border border-line rounded-md2 p-3"
+                onsubmit="return false;"
+              >
+                <label class="font-mono text-xs text-ink-faint" for="long-url"
+                  >Destination URL</label
+                >
+                <div class="flex flex-col sm:flex-row gap-2">
+                  <input
+                    id="long-url"
+                    type="url"
+                    value="https://example.com/products/summer-sale/2026"
+                    aria-label="URL to shorten"
+                    class="flex-1 min-w-0 border border-line bg-surface outline-none px-3.5 py-3 rounded-sm2 font-mono text-sm text-ink placeholder:text-ink-faint"
+                  /><button type="submit" class="dashboard-primary-button">
+                    Shorten &amp; save
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <aside
+            id="qr"
+            class="bg-dark text-white rounded-lg2 p-7 sm:p-8 shadow-[0_24px_80px_rgba(29,31,38,0.12)]"
+          >
+            <div class="flex items-start justify-between gap-6">
+              <div>
+                <p class="font-mono text-xs tracking-[0.14em] uppercase text-white/55">
+                  QR code generator
+                </p>
+                <p class="mt-3 font-display font-bold text-[38px] tracking-[-0.03em]">Scan ready</p>
+                <p class="mt-2 text-sm leading-relaxed text-white/60">
+                  QR code is generated from the saved short link and inherits the same click
+                  analytics.
+                </p>
+              </div>
+              <div class="qr-preview" aria-label="Generated QR code preview">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+                ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+                ><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+                ><i></i>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section id="analytics" class="mt-6 grid grid-cols-1 md:grid-cols-4 gap-5">
+          <article class="dashboard-stat-card">
+            <p class="font-mono text-xs text-ink-faint">Saved links</p>
+            <p class="mt-2 font-display font-bold text-[32px]">248</p>
+            <p class="mt-3 text-sm text-accent-2 font-semibold">↑ 18% this month</p>
+          </article>
+          <article class="dashboard-stat-card">
+            <p class="font-mono text-xs text-ink-faint">Link clicks</p>
+            <p class="mt-2 font-display font-bold text-[32px]">12,482</p>
+            <p class="mt-3 text-sm text-accent-2 font-semibold">↑ 24% this month</p>
+          </article>
+          <article class="dashboard-stat-card">
+            <p class="font-mono text-xs text-ink-faint">QR scans</p>
+            <p class="mt-2 font-display font-bold text-[32px]">3,910</p>
+            <p class="mt-3 text-sm text-accent-2 font-semibold">↑ 9% this month</p>
+          </article>
+          <article class="dashboard-stat-card">
+            <p class="font-mono text-xs text-ink-faint">Conversion rate</p>
+            <p class="mt-2 font-display font-bold text-[32px]">7.8%</p>
+            <p class="mt-3 text-sm text-ink-soft">Demo estimate</p>
+          </article>
+        </section>
+
+        <router-outlet />
+      </main>
+    </div>
+  </div>
 </div>
