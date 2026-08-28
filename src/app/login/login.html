@@ -21,7 +21,7 @@
       <span
         class="inline-flex items-center gap-2 font-mono text-[12.5px] text-ink-soft bg-surface border border-line rounded-full px-3.5 py-[7px] mb-7"
       >
-        <span class="w-1.5 h-1.5 rounded-full bg-accent-2"></span> Demo workspace ready
+        <span class="w-1.5 h-1.5 rounded-full bg-accent-2"></span> Real backend connected
       </span>
       <h1
         class="font-display font-bold leading-[1.06] tracking-[-0.02em] text-[38px] sm:text-[48px] lg:text-[62px]"
@@ -29,8 +29,8 @@
         Welcome back to <span class="text-accent">smarter</span><br />link tracking.
       </h1>
       <p class="mt-[22px] max-w-[520px] text-[17px] leading-relaxed text-ink-soft">
-        Sign in with the demo credentials and jump into the Linkly flow with the same clean, focused
-        interface from the landing page.
+        Sign in with your Linkly account and jump into the same clean, focused interface from the
+        landing page.
       </p>
       <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-[640px]">
         <div class="bg-surface border border-line rounded-md2 p-5">
@@ -57,37 +57,43 @@
           Access your dashboard
         </h2>
         <p class="mt-3 text-[15px] leading-relaxed text-ink-soft">
-          Use the demo account below to preview Linkly.
+          Use your registered account to access Linkly.
         </p>
 
-        <div
-          class="mt-6 rounded-md2 border border-line bg-bg p-4 font-mono text-[13px] text-ink-soft"
-        >
-          <p><span class="text-ink font-semibold">Demo Email:</span> demo&#64;linkly.com</p>
-          <p class="mt-1"><span class="text-ink font-semibold">Demo Password:</span> demo123</p>
-        </div>
-
-        <form class="mt-7 flex flex-col gap-4" (submit)="loginWithDemo(); $event.preventDefault()">
+        <form class="mt-7 flex flex-col gap-4" [formGroup]="form" (ngSubmit)="login()">
           <label class="flex flex-col gap-2 text-sm font-semibold text-ink"
             >Email address<input
               type="email"
-              value="demo@linkly.com"
+              formControlName="email"
+              placeholder="you@example.com"
+              autocomplete="email"
               class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm text-ink outline-none focus:border-accent"
           /></label>
           <label class="flex flex-col gap-2 text-sm font-semibold text-ink"
             >Password<input
               type="password"
-              value="demo123"
+              formControlName="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
               class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm text-ink outline-none focus:border-accent"
           /></label>
           <button
             type="submit"
             class="mt-2 inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-accent text-white hover:bg-accent-dark hover:-translate-y-px transition-all"
+            [disabled]="isSubmitting()"
+            [class.opacity-70]="isSubmitting()"
           >
-            Log in with demo
+            {{ isSubmitting() ? 'Logging in…' : 'Log in' }}
             <span aria-hidden="true">→</span>
           </button>
         </form>
+        @if (errorMessage()) {
+          <p
+            class="mt-4 rounded-sm2 border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"
+          >
+            {{ errorMessage() }}
+          </p>
+        }
         <p class="mt-6 text-center text-sm text-ink-soft">
           New to Linkly?
           <a routerLink="/register" class="font-semibold text-accent hover:text-accent-dark"
