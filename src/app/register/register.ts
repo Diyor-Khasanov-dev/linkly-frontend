@@ -4,6 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 
 import { ApiService } from '../api.service';
 import { AuthService } from '../auth.service';
+import {
+  normalizeEmail,
+  normalizeWhitespace,
+  trimValue,
+  trimmedLengthValidator,
+} from '../form-utils';
 
 @Component({
   selector: 'app-register',
@@ -21,14 +27,21 @@ export class Register {
   readonly errorMessage = signal('');
   readonly noticeMessage = signal('');
   readonly form = this.formBuilder.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
+    name: ['', [Validators.required, trimmedLengthValidator(2, 80)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, trimmedLengthValidator(6)]],
     otp: [''],
   });
 
   async register(): Promise<void> {
-    const { name, email, password } = this.form.getRawValue();
+    const rawValue = this.form.getRawValue();
+    const payload = {
+      name: normalizeWhitespace(rawValue.name),
+      email: normalizeEmail(rawValue.email),
+      password: trimValue(rawValue.password),
+    };
+
+    this.form.patchValue(payload, { emitEvent: false });
 
     if (
       this.form.controls.name.invalid ||
@@ -45,7 +58,7 @@ export class Register {
     this.noticeMessage.set('');
 
     try {
-      await this.authService.register({ name, email, password });
+      await this.authService.register(payload);
 
       if (this.authService.isAuthenticated()) {
         await this.router.navigate(['/dashboard']);
@@ -63,7 +76,11 @@ export class Register {
   }
 
   async verifyOtp(): Promise<void> {
-    const { email, otp } = this.form.getRawValue();
+    const { email: rawEmail, otp: rawOtp } = this.form.getRawValue();
+    const email = normalizeEmail(rawEmail);
+    const otp = trimValue(rawOtp);
+
+    this.form.patchValue({ email, otp }, { emitEvent: false });
 
     if (!email || !otp || this.form.controls.email.invalid || this.isSubmitting()) {
       this.form.controls.email.markAsTouched();
