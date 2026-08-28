@@ -28,40 +28,73 @@
           Create your Linkly space
         </h1>
         <p class="mt-3 text-[15px] leading-relaxed text-ink-soft">
-          Start with a polished demo account and see how your future link command center will feel.
+          Create a real Linkly account backed by the production API.
         </p>
-        <form class="mt-7 flex flex-col gap-4" onsubmit="return false;">
+        <form class="mt-7 flex flex-col gap-4" [formGroup]="form" (ngSubmit)="register()">
           <label class="flex flex-col gap-2 text-sm font-semibold text-ink"
             >Workspace name<input
               type="text"
-              value="Demo Workspace"
+              formControlName="name"
+              placeholder="Your workspace"
+              autocomplete="name"
               class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm text-ink outline-none focus:border-accent"
           /></label>
           <label class="flex flex-col gap-2 text-sm font-semibold text-ink"
             >Email address<input
               type="email"
-              value="demo@linkly.com"
+              formControlName="email"
+              placeholder="you@example.com"
+              autocomplete="email"
               class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm text-ink outline-none focus:border-accent"
           /></label>
           <label class="flex flex-col gap-2 text-sm font-semibold text-ink"
             >Password<input
               type="password"
-              value="demo123"
+              formControlName="password"
+              placeholder="At least 6 characters"
+              autocomplete="new-password"
               class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm text-ink outline-none focus:border-accent"
           /></label>
           <button
             type="submit"
             class="mt-2 inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-accent text-white hover:bg-accent-dark hover:-translate-y-px transition-all"
+            [disabled]="isSubmitting()"
+            [class.opacity-70]="isSubmitting()"
           >
-            Create demo account
+            {{ isSubmitting() ? 'Creating…' : 'Create account' }}
           </button>
         </form>
-        <div
-          class="mt-6 rounded-md2 border border-line bg-bg p-4 font-mono text-[13px] text-ink-soft"
-        >
-          <p><span class="text-ink font-semibold">Demo Email:</span> demo&#64;linkly.com</p>
-          <p class="mt-1"><span class="text-ink font-semibold">Demo Password:</span> demo123</p>
-        </div>
+        @if (noticeMessage()) {
+          <div class="mt-6 rounded-md2 border border-line bg-bg p-4 text-[13px] text-ink-soft">
+            <p class="font-semibold text-ink">{{ noticeMessage() }}</p>
+            <div class="mt-4 flex flex-col gap-3">
+              <label class="flex flex-col gap-2 text-sm font-semibold text-ink">
+                OTP code
+                <input
+                  type="text"
+                  formControlName="otp"
+                  placeholder="Enter verification code"
+                  class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm text-ink outline-none focus:border-accent"
+                />
+              </label>
+              <button
+                type="button"
+                (click)="verifyOtp()"
+                [disabled]="isSubmitting()"
+                class="inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-ink text-white hover:bg-[#2A2D36] hover:-translate-y-px transition-all"
+              >
+                Verify account
+              </button>
+            </div>
+          </div>
+        }
+        @if (errorMessage()) {
+          <p
+            class="mt-4 rounded-sm2 border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"
+          >
+            {{ errorMessage() }}
+          </p>
+        }
       </div>
     </section>
 
@@ -73,7 +106,7 @@
       <h2
         class="font-display font-bold leading-[1.06] tracking-[-0.02em] text-[38px] sm:text-[48px] lg:text-[62px]"
       >
-        Short links with <span class="text-accent">instant</span><br />clarity.
+        Real short links with <span class="text-accent">instant</span><br />clarity.
       </h2>
       <p class="mt-[22px] max-w-[520px] text-[17px] leading-relaxed text-ink-soft">
         Create links, QR codes, and measurable campaigns from one calm dashboard made for speed.
