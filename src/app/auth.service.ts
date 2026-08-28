@@ -6,6 +6,7 @@ import { ApiService, AuthResponse, LinklyUser, LoginPayload, RegisterPayload } f
 
 const AUTH_STORAGE_KEY = 'linkly.auth.token';
 const USER_STORAGE_KEY = 'linkly.auth.user';
+const SESSION_STORAGE_KEY = 'linkly.auth.session';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -36,15 +37,13 @@ export class AuthService {
     const token = this.getToken();
     this.clearSession();
 
-    if (token) {
-      await firstValueFrom(this.api.logout(token)).catch(() => undefined);
-    }
+    await firstValueFrom(this.api.logout(token)).catch(() => undefined);
   }
 
   async refreshUser(): Promise<LinklyUser | null> {
     const token = this.getToken();
 
-    if (!token) {
+    if (!token && !this.hasSession()) {
       this.clearSession();
       return null;
     }
@@ -55,7 +54,7 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return Boolean(this.getToken());
+    return Boolean(this.getToken() || this.getCurrentUser() || this.hasSession());
   }
 
   getToken(): string | null {
@@ -70,8 +69,14 @@ export class AuthService {
     const token = this.api.extractToken(response);
     const user = this.api.extractUser(response);
 
-    if (token && this.isBrowser()) {
-      localStorage.setItem(AUTH_STORAGE_KEY, token);
+    if (this.isBrowser()) {
+      if (token) {
+        localStorage.setItem(AUTH_STORAGE_KEY, token);
+      }
+
+      if (token || user) {
+        localStorage.setItem(SESSION_STORAGE_KEY, 'true');
+      }
     }
 
     this.setUser(user);
@@ -88,6 +93,7 @@ export class AuthService {
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
     } else {
       localStorage.removeItem(USER_STORAGE_KEY);
+      localStorage.removeItem(SESSION_STORAGE_KEY);
     }
   }
 
@@ -97,7 +103,12 @@ export class AuthService {
     if (this.isBrowser()) {
       localStorage.removeItem(AUTH_STORAGE_KEY);
       localStorage.removeItem(USER_STORAGE_KEY);
+      localStorage.removeItem(SESSION_STORAGE_KEY);
     }
+  }
+
+  private hasSession(): boolean {
+    return this.isBrowser() && localStorage.getItem(SESSION_STORAGE_KEY) === 'true';
   }
 
   private getStoredUser(): LinklyUser | null {
@@ -115,6 +126,7 @@ export class AuthService {
       return JSON.parse(rawUser) as LinklyUser;
     } catch {
       localStorage.removeItem(USER_STORAGE_KEY);
+      localStorage.removeItem(SESSION_STORAGE_KEY);
       return null;
     }
   }

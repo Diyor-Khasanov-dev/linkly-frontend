@@ -45,16 +45,25 @@ export interface OtpVerificationPayload {
   otp: string;
 }
 
-export interface ShortLinkResponse {
+export interface ShortLink {
+  id?: string;
+  _id?: string;
   shortCode?: string;
   shortUrl?: string;
   url?: string;
   originalUrl?: string;
   longUrl?: string;
   destination?: string;
-  data?: ShortLinkResponse;
-  message?: string;
+  slug?: string;
   [key: string]: unknown;
+}
+
+export interface ShortLinkResponse extends ShortLink {
+  data?: ShortLink & {
+    link?: ShortLink;
+  };
+  link?: ShortLink;
+  message?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -77,8 +86,8 @@ export class ApiService {
     return this.post('/api/auth/logout', {}, token);
   }
 
-  getMe(token: string): Observable<LinklyUser | null> {
-    return this.get<AuthResponse | LinklyUser>('/api/auth/getme', token).pipe(
+  getMe(token: string | null = null): Observable<LinklyUser | null> {
+    return this.get<AuthResponse | LinklyUser>('/api/auth/me', token).pipe(
       map((response) => this.extractUser(response)),
     );
   }
@@ -88,14 +97,15 @@ export class ApiService {
   }
 
   formatShortUrl(response: ShortLinkResponse): string {
-    const data = response.data ?? response;
+    const data = response.data?.link ?? response.data ?? response.link ?? response;
     const directUrl = data.shortUrl ?? data.url;
 
     if (directUrl) {
       return directUrl;
     }
 
-    return data.shortCode ? `${LINKLY_API_BASE_URL}/${data.shortCode}` : '';
+    const slug = data.slug ?? data.shortCode;
+    return slug ? `${LINKLY_API_BASE_URL}/${slug}` : '';
   }
 
   extractToken(response: AuthResponse): string | null {
@@ -128,6 +138,10 @@ export class ApiService {
 
   extractErrorMessage(error: unknown): string {
     if (error instanceof HttpErrorResponse) {
+      if (error.status === 0) {
+        return 'Unable to reach the Linkly API. Please check your connection and try again.';
+      }
+
       const body = error.error as { message?: string; error?: string } | string | null;
 
       if (typeof body === 'string' && body.trim()) {
@@ -146,13 +160,19 @@ export class ApiService {
 
   private get<T>(path: string, token?: string | null): Observable<T> {
     return this.http
-      .get<T>(`${LINKLY_API_BASE_URL}${path}`, { headers: this.headers(token) })
+      .get<T>(`${LINKLY_API_BASE_URL}${path}`, {
+        headers: this.headers(token),
+        withCredentials: true,
+      })
       .pipe(catchError((error: unknown) => throwError(() => error)));
   }
 
   private post<T>(path: string, body: unknown, token?: string | null): Observable<T> {
     return this.http
-      .post<T>(`${LINKLY_API_BASE_URL}${path}`, body, { headers: this.headers(token) })
+      .post<T>(`${LINKLY_API_BASE_URL}${path}`, body, {
+        headers: this.headers(token),
+        withCredentials: true,
+      })
       .pipe(catchError((error: unknown) => throwError(() => error)));
   }
 
