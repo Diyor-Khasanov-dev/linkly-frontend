@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
 export const LINKLY_API_BASE_URL = 'https://linkly-backend-8vcp.onrender.com';
+const AUTH_GET_ME_PATH = '/api/auth/getme';
 
 export interface LinklyUser {
   id?: string;
@@ -87,7 +88,7 @@ export class ApiService {
   }
 
   getMe(token: string | null = null): Observable<LinklyUser | null> {
-    return this.get<AuthResponse | LinklyUser>('/api/auth/me', token).pipe(
+    return this.get<AuthResponse | LinklyUser>(AUTH_GET_ME_PATH, token).pipe(
       map((response) => this.extractUser(response)),
     );
   }
@@ -139,7 +140,7 @@ export class ApiService {
   extractErrorMessage(error: unknown): string {
     if (error instanceof HttpErrorResponse) {
       if (error.status === 0) {
-        return 'Unable to reach the Linkly API. Please check your connection and try again.';
+        return 'The browser could not complete the Linkly API request. This is usually caused by CORS, a blocked preflight request, or a mixed-content/network policy—not by your internet connection.';
       }
 
       const body = error.error as { message?: string; error?: string } | string | null;
@@ -162,7 +163,6 @@ export class ApiService {
     return this.http
       .get<T>(`${LINKLY_API_BASE_URL}${path}`, {
         headers: this.headers(token),
-        withCredentials: true,
       })
       .pipe(catchError((error: unknown) => throwError(() => error)));
   }
@@ -171,7 +171,6 @@ export class ApiService {
     return this.http
       .post<T>(`${LINKLY_API_BASE_URL}${path}`, body, {
         headers: this.headers(token),
-        withCredentials: true,
       })
       .pipe(catchError((error: unknown) => throwError(() => error)));
   }

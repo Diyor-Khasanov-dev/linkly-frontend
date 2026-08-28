@@ -64,10 +64,10 @@ import { AuthService } from '../../auth.service';
 
         <aside class="profile-panel profile-security-card">
           <p class="dashboard-eyebrow">Security</p>
-          <h2 class="dashboard-panel-title">Cookie session auth</h2>
+          <h2 class="dashboard-panel-title">Bearer token auth</h2>
           <p>
-            Linkly keeps the authenticated backend session active with secure API credentials and
-            sends credentials on backend requests when the API relies on HttpOnly cookies.
+            Linkly stores the issued bearer token locally and sends it in the Authorization header
+            on protected backend requests.
           </p>
           <div class="profile-credential-box">
             <p><span>Status</span><strong>Authenticated</strong></p>
