@@ -3,6 +3,7 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 
 import { ApiService } from '../../api.service';
 import { AuthService } from '../../auth.service';
+import { trimValue } from '../../form-utils';
 
 @Component({
   selector: 'app-link-short',
@@ -104,6 +105,9 @@ export class LinkShort {
   });
 
   shorten(): void {
+    const originalUrl = trimValue(this.form.controls.originalUrl.value);
+    this.form.patchValue({ originalUrl }, { emitEvent: false });
+
     if (this.form.invalid || this.isSubmitting()) {
       this.form.markAllAsTouched();
       return;
@@ -113,7 +117,7 @@ export class LinkShort {
     this.errorMessage.set('');
     this.shortUrl.set('');
 
-    this.api.createShortLink(this.form.controls.originalUrl.value, this.auth.getToken()).subscribe({
+    this.api.createShortLink(originalUrl, this.auth.getToken()).subscribe({
       next: (response) => this.shortUrl.set(this.api.formatShortUrl(response)),
       error: (error: unknown) => {
         this.errorMessage.set(this.api.extractErrorMessage(error));

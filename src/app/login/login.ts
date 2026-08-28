@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { ApiService } from '../api.service';
 import { AuthService } from '../auth.service';
+import { normalizeEmail, trimValue, trimmedLengthValidator } from '../form-utils';
 
 @Component({
   selector: 'app-login',
@@ -22,10 +23,17 @@ export class Login {
   readonly errorMessage = signal('');
   readonly form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required, trimmedLengthValidator(6)]],
   });
 
   async login(): Promise<void> {
+    const payload = {
+      email: normalizeEmail(this.form.controls.email.value),
+      password: trimValue(this.form.controls.password.value),
+    };
+
+    this.form.patchValue(payload, { emitEvent: false });
+
     if (this.form.invalid || this.isSubmitting()) {
       this.form.markAllAsTouched();
       return;
@@ -35,7 +43,7 @@ export class Login {
     this.errorMessage.set('');
 
     try {
-      await this.authService.login(this.form.getRawValue());
+      await this.authService.login(payload);
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
       await this.router.navigateByUrl(returnUrl);
     } catch (error) {
