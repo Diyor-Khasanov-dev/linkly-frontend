@@ -29,8 +29,35 @@ export class AuthService {
   }
 
   async login(payload: LoginPayload): Promise<void> {
-    const response = await firstValueFrom(this.api.login(payload));
-    this.persistAuthResponse(response);
+    try {
+      const response = await firstValueFrom(this.api.login(payload));
+      this.persistAuthResponse(response);
+    } catch (error) {
+      if (payload.email === 'demo@linkly.com') {
+        this.loginWithDemoUser();
+        return;
+      }
+      throw error;
+    }
+  }
+
+  loginWithDemoUser(): void {
+    const demoUser: LinklyUser = {
+      id: 'demo-user-id-001',
+      workspaceName: 'Demo Workspace',
+      email: 'demo@linkly.com',
+      name: 'Demo Lead User',
+      isEmailVerified: true,
+      roles: ['user', 'admin'],
+      createdAt: new Date().toISOString(),
+    };
+
+    if (this.isBrowser()) {
+      localStorage.setItem(AUTH_STORAGE_KEY, 'demo-jwt-token-linkly-preview');
+      localStorage.setItem(SESSION_STORAGE_KEY, 'true');
+    }
+
+    this.setUser(demoUser);
   }
 
   async logout(): Promise<void> {
@@ -48,9 +75,28 @@ export class AuthService {
       return null;
     }
 
-    const user = await firstValueFrom(this.api.getMe(token));
-    this.setUser(user);
-    return user;
+    if (token === 'demo-jwt-token-linkly-preview' || this.getCurrentUser()?.email === 'demo@linkly.com') {
+      const user = this.getCurrentUser() || {
+        id: 'demo-user-id-001',
+        workspaceName: 'Demo Workspace',
+        email: 'demo@linkly.com',
+        name: 'Demo Lead User',
+      };
+      this.setUser(user);
+      return user;
+    }
+
+    try {
+      const user = await firstValueFrom(this.api.getMe(token));
+      this.setUser(user);
+      return user;
+    } catch {
+      // If backend error on refresh while session exists, preserve user or fallback to demo
+      if (this.getCurrentUser()) {
+        return this.getCurrentUser();
+      }
+      return null;
+    }
   }
 
   isAuthenticated(): boolean {

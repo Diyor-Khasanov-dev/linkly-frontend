@@ -26,6 +26,18 @@ export class Login {
     password: ['', [Validators.required, trimmedLengthValidator(8)]],
   });
 
+  fillDemoCredentials(): void {
+    this.form.patchValue({
+      email: 'demo@linkly.com',
+      password: 'demo123456',
+    });
+  }
+
+  async loginWithDemo(): Promise<void> {
+    this.fillDemoCredentials();
+    await this.login();
+  }
+
   async login(): Promise<void> {
     const payload = {
       email: normalizeEmail(this.form.controls.email.value),
