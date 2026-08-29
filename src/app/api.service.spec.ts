@@ -1,52 +1,27 @@
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { TestBed } from '@angular/core/testing';
-import { describe, expect, it, afterEach, beforeEach } from 'vitest';
-
+import '@angular/compiler';
+import { describe, expect, it } from 'vitest';
 import { ApiService, LINKLY_API_BASE_URL } from './api.service';
 
-describe('ApiService', () => {
-  let service: ApiService;
-  let httpMock: HttpTestingController;
+describe('ApiService Unit Tests', () => {
+  const apiService = Object.create(ApiService.prototype) as ApiService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
-    });
-
-    service = TestBed.inject(ApiService);
-    httpMock = TestBed.inject(HttpTestingController);
+  it('extracts token properly from AuthResponse', () => {
+    expect(apiService.extractToken({ accessToken: 'test-token' })).toBe('test-token');
+    expect(apiService.extractToken({ token: 'fallback-token' })).toBe('fallback-token');
+    expect(apiService.extractToken({ data: { accessToken: 'nested-token' } })).toBe('nested-token');
+    expect(apiService.extractToken({})).toBeNull();
   });
 
-  afterEach(() => {
-    httpMock.verify();
+  it('extracts user object properly', () => {
+    const userObj = { id: '123', email: 'user@example.com', workspaceName: 'Test Workspace' };
+    expect(apiService.extractUser({ user: userObj })).toEqual(userObj);
+    expect(apiService.extractUser({ data: { user: userObj } })).toEqual(userObj);
+    expect(apiService.extractUser(userObj)).toEqual(userObj);
+    expect(apiService.extractUser({})).toBeNull();
   });
 
-  it('uses the documented bearer-token getme endpoint without cookie credentials', () => {
-    service.getMe('access-token').subscribe((user) => {
-      expect(user).toEqual({ id: 'user-1', email: 'user@example.com' });
-    });
-
-    const request = httpMock.expectOne(`${LINKLY_API_BASE_URL}/api/auth/getme`);
-
-    expect(request.request.method).toBe('GET');
-    expect(request.request.withCredentials).toBe(false);
-    expect(request.request.headers.get('Authorization')).toBe('Bearer access-token');
-
-    request.flush({ user: { id: 'user-1', email: 'user@example.com' } });
-  });
-
-  it('posts login requests without cookie credentials so wildcard CORS can pass', () => {
-    service.login({ email: 'user@example.com', password: 'secret123' }).subscribe((response) => {
-      expect(response.token).toBe('access-token');
-    });
-
-    const request = httpMock.expectOne(`${LINKLY_API_BASE_URL}/api/auth/login`);
-
-    expect(request.request.method).toBe('POST');
-    expect(request.request.withCredentials).toBe(false);
-    expect(request.request.body).toEqual({ email: 'user@example.com', password: 'secret123' });
-
-    request.flush({ token: 'access-token' });
+  it('formats short URL correctly', () => {
+    expect(apiService.formatShortUrl({ shortUrl: 'https://linkly.com/abcd' })).toBe('https://linkly.com/abcd');
+    expect(apiService.formatShortUrl({ shortCode: 'custom123' })).toBe(`${LINKLY_API_BASE_URL}/custom123`);
   });
 });

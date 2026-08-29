@@ -158,21 +158,53 @@
 
           <form
             class="mt-4 flex flex-col sm:flex-row gap-2 bg-bg border border-line rounded-sm2 p-1.5"
-            onsubmit="return false;"
+            [formGroup]="form"
+            (ngSubmit)="shortenUrl()"
           >
             <input
               type="url"
-              placeholder="paste-your-long-url-here.com/..."
+              formControlName="url"
+              placeholder="https://example.com/products/summer-sale"
               aria-label="URL to shorten"
               class="flex-1 min-w-0 border-none bg-transparent outline-none px-3.5 py-3 font-mono text-sm text-ink placeholder:text-ink-faint"
             />
             <button
               type="submit"
-              class="flex-shrink-0 inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-accent text-white hover:bg-accent-dark hover:-translate-y-px transition-all w-full sm:w-auto"
+              [disabled]="isSubmitting()"
+              class="flex-shrink-0 inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-accent text-white hover:bg-accent-dark hover:-translate-y-px transition-all w-full sm:w-auto disabled:opacity-60"
             >
-              Shorten URL
+              {{ isSubmitting() ? 'Shortening…' : 'Shorten URL' }}
             </button>
           </form>
+
+          @if (shortUrl()) {
+            <div class="mt-4 p-4 rounded-md2 border border-line bg-surface text-left">
+              <p class="font-mono text-xs text-ink-faint uppercase">Short URL created</p>
+              <div class="mt-2 flex items-center justify-between gap-3">
+                <a
+                  [href]="shortUrl()"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="font-mono font-bold text-accent text-base break-all"
+                >
+                  {{ shortUrl() }}
+                </a>
+                <button
+                  type="button"
+                  (click)="copyShortUrl()"
+                  class="flex-shrink-0 px-3 py-1.5 rounded-sm2 bg-ink text-white font-semibold text-xs hover:bg-[#2A2D36]"
+                >
+                  Copy
+                </button>
+              </div>
+            </div>
+          }
+
+          @if (errorMessage()) {
+            <p class="mt-3 text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-sm2 p-3 text-left">
+              {{ errorMessage() }}
+            </p>
+          }
 
           <p class="mt-3.5 text-[13px] text-ink-faint">Free to use. No credit card required.</p>
 

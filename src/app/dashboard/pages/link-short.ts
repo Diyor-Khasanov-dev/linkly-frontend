@@ -30,9 +30,18 @@ import { trimValue } from '../../form-utils';
             <input
               class="dashboard-input"
               type="url"
-              formControlName="originalUrl"
+              formControlName="url"
               placeholder="https://example.com/very/long/link"
               autocomplete="url"
+            />
+          </label>
+          <label class="mt-4 flex flex-col gap-3 font-bold text-ink">
+            Custom alias (optional)
+            <input
+              class="dashboard-input"
+              type="text"
+              formControlName="customAlias"
+              placeholder="e.g. my-custom-link (4-32 chars)"
             />
           </label>
           <button
@@ -101,12 +110,14 @@ export class LinkShort {
   readonly errorMessage = signal('');
   readonly shortUrl = signal('');
   readonly form = this.formBuilder.group({
-    originalUrl: ['', [Validators.required, Validators.pattern(/^https?:\/\/.+/i)]],
+    url: ['', [Validators.required, Validators.pattern(/^https?:\/\/.+/i)]],
+    customAlias: [''],
   });
 
   shorten(): void {
-    const originalUrl = trimValue(this.form.controls.originalUrl.value);
-    this.form.patchValue({ originalUrl }, { emitEvent: false });
+    const url = trimValue(this.form.controls.url.value);
+    const customAlias = trimValue(this.form.controls.customAlias.value);
+    this.form.patchValue({ url, customAlias }, { emitEvent: false });
 
     if (this.form.invalid || this.isSubmitting()) {
       this.form.markAllAsTouched();
@@ -117,7 +128,7 @@ export class LinkShort {
     this.errorMessage.set('');
     this.shortUrl.set('');
 
-    this.api.createShortLink(originalUrl, this.auth.getToken()).subscribe({
+    this.api.createShortLink(url, this.auth.getToken(), customAlias).subscribe({
       next: (response) => this.shortUrl.set(this.api.formatShortUrl(response)),
       error: (error: unknown) => {
         this.errorMessage.set(this.api.extractErrorMessage(error));
