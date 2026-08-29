@@ -1,32 +1,33 @@
 ❯ Building...
 ✔ Building...
 Initial chunk files | Names             |  Raw size
-styles.css          | styles            |  37.17 kB |
-main.js             | main              |   5.24 kB |
+styles.css          | styles            |  37.32 kB |
+main.js             | main              |   5.42 kB |
 chunk-BJTWCHK2.js   | -                 |   4.95 kB |
 chunk-ITJ7AO2O.js   | -                 |   3.76 kB |
 chunk-VUJOFXKG.js   | -                 | 938 bytes |
 
-                    | Initial total     |  52.06 kB
+                    | Initial total     |  52.39 kB
 
 Lazy chunk files    | Names             |  Raw size
 chunk-GV3J7UV3.js   | landing           |  57.29 kB |
 chunk-Q7JGH2BF.js   | dashboard         |  50.36 kB |
-chunk-G5VTD477.js   | qr-code           |  31.07 kB |
-chunk-DNAW4MTP.js   | expiring-qr-codes |  30.03 kB |
-chunk-NRYZQGI7.js   | expiring-links    |  29.83 kB |
-chunk-6YMJH63U.js   | analytics-link    |  26.12 kB |
-chunk-H5BGP2KH.js   | analytics-qr-code |  24.08 kB |
-chunk-AVZANTS6.js   | register          |  22.83 kB |
+chunk-7L7SWECY.js   | qr-code           |  31.07 kB |
+chunk-B74CDXGI.js   | expiring-qr-codes |  30.03 kB |
+chunk-S5XDY3GE.js   | expiring-links    |  29.83 kB |
+chunk-H4QNCY3G.js   | analytics-link    |  26.12 kB |
+chunk-AHGWBF6M.js   | analytics-qr-code |  24.08 kB |
+chunk-JTLRFSKP.js   | register          |  22.82 kB |
 chunk-WH6ZHXL7.js   | login             |  21.87 kB |
+chunk-N43Y7NBY.js   | otp-verification  |  19.57 kB |
 chunk-PHVDOHVR.js   | link-short        |  13.51 kB |
-chunk-QF5SV6VY.js   | -                 |  11.97 kB |
+chunk-JLEMCLZM.js   | -                 |  11.97 kB |
 chunk-KVLAZSAH.js   | profile           |  10.32 kB |
 chunk-KLHW3KJI.js   | not-found         |   8.44 kB |
 chunk-XKYXNXBI.js   | loading           |   8.02 kB |
-chunk-3USKPY5J.js   | -                 | 817 bytes |
+...and 1 more lazy chunks files. Use "--verbose" to show all the files.
 
-Application bundle generation complete. [4.684 seconds] - 2026-08-29T09:51:15.598Z
+Application bundle generation complete. [4.304 seconds] - 2026-08-29T16:38:33.119Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.

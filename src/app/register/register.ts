@@ -67,9 +67,9 @@ export class Register {
         return;
       }
 
-      this.noticeMessage.set(
-        'Account created. If an OTP was sent to your email, enter it below to finish verification.',
-      );
+      await this.router.navigate(['/otp-verification'], {
+        queryParams: { email: payload.email },
+      });
     } catch (error) {
       this.errorMessage.set(this.api.extractErrorMessage(error));
     } finally {
