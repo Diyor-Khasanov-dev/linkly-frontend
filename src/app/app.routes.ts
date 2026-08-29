@@ -19,6 +19,12 @@ export const routes: Routes = [
     loadComponent: () => import('./register/register').then((component) => component.Register),
   },
   {
+    path: 'otp-verification',
+    title: 'OTP Verification — Linkly',
+    loadComponent: () =>
+      import('./otp-verification/otp-verification').then((component) => component.OtpVerification),
+  },
+  {
     path: 'dashboard',
     title: 'Dashboard — Linkly',
     canActivate: [authGuard],
