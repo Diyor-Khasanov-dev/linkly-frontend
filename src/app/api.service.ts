@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError, timeout } from 'rxjs';
 
 export const LINKLY_API_BASE_URL = 'https://linkly-backend-8vcp.onrender.com';
 const AUTH_GET_ME_PATH = '/api/auth/getme';
@@ -184,7 +184,10 @@ export class ApiService {
       .get<T>(`${LINKLY_API_BASE_URL}${path}`, {
         headers: this.headers(token),
       })
-      .pipe(catchError((error: unknown) => throwError(() => error)));
+      .pipe(
+        timeout(10000),
+        catchError((error: unknown) => throwError(() => error)),
+      );
   }
 
   private post<T>(path: string, body: unknown, token?: string | null): Observable<T> {
@@ -192,7 +195,10 @@ export class ApiService {
       .post<T>(`${LINKLY_API_BASE_URL}${path}`, body, {
         headers: this.headers(token),
       })
-      .pipe(catchError((error: unknown) => throwError(() => error)));
+      .pipe(
+        timeout(10000),
+        catchError((error: unknown) => throwError(() => error)),
+      );
   }
 
   private headers(token?: string | null): HttpHeaders {
