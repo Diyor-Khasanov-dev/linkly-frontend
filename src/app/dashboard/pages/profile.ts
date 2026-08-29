@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { AuthService } from '../../auth.service';
@@ -78,8 +78,12 @@ import { AuthService } from '../../auth.service';
     </section>
   `,
 })
-export class Profile {
+export class Profile implements OnInit {
   readonly authService = inject(AuthService);
+
+  ngOnInit(): void {
+    void this.authService.refreshUser();
+  }
 
   initials(value: string | undefined | null): string {
     if (!value) {

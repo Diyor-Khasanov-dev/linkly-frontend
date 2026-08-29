@@ -24,4 +24,8 @@ describe('ApiService Unit Tests', () => {
     expect(apiService.formatShortUrl({ shortUrl: 'https://linkly.com/abcd' })).toBe('https://linkly.com/abcd');
     expect(apiService.formatShortUrl({ shortCode: 'custom123' })).toBe(`${LINKLY_API_BASE_URL}/custom123`);
   });
+
+  it('formats error messages correctly', () => {
+    expect(apiService.extractErrorMessage(new Error('Generic error'))).toBe('Request failed. Please try again.');
+  });
 });
