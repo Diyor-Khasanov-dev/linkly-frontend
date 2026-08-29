@@ -27,16 +27,16 @@ export class Register {
   readonly errorMessage = signal('');
   readonly noticeMessage = signal('');
   readonly form = this.formBuilder.group({
-    name: ['', [Validators.required, trimmedLengthValidator(2, 80)]],
+    workspaceName: ['', [Validators.required, trimmedLengthValidator(2, 80)]],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, trimmedLengthValidator(6)]],
-    otp: [''],
+    password: ['', [Validators.required, trimmedLengthValidator(8)]],
+    otp: ['', [trimmedLengthValidator(6, 6)]],
   });
 
   async register(): Promise<void> {
     const rawValue = this.form.getRawValue();
     const payload = {
-      name: normalizeWhitespace(rawValue.name),
+      workspaceName: normalizeWhitespace(rawValue.workspaceName),
       email: normalizeEmail(rawValue.email),
       password: trimValue(rawValue.password),
     };
@@ -44,12 +44,14 @@ export class Register {
     this.form.patchValue(payload, { emitEvent: false });
 
     if (
-      this.form.controls.name.invalid ||
+      this.form.controls.workspaceName.invalid ||
       this.form.controls.email.invalid ||
       this.form.controls.password.invalid ||
       this.isSubmitting()
     ) {
-      this.form.markAllAsTouched();
+      this.form.controls.workspaceName.markAsTouched();
+      this.form.controls.email.markAsTouched();
+      this.form.controls.password.markAsTouched();
       return;
     }
 

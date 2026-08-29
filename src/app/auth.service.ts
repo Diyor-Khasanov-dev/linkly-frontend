@@ -22,8 +22,8 @@ export class AuthService {
     return response;
   }
 
-  async verifyOtp(email: string, otp: string): Promise<AuthResponse> {
-    const response = await firstValueFrom(this.api.verifyOtp({ email, otp }));
+  async verifyOtp(email: string, code: string): Promise<AuthResponse> {
+    const response = await firstValueFrom(this.api.verifyOtp({ email, code }));
     this.persistAuthResponse(response);
     return response;
   }

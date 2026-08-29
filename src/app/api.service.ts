@@ -8,9 +8,13 @@ const AUTH_GET_ME_PATH = '/api/auth/getme';
 export interface LinklyUser {
   id?: string;
   _id?: string;
+  workspaceName?: string;
   name?: string;
   username?: string;
   email?: string;
+  isEmailVerified?: boolean;
+  isVerificated?: boolean;
+  roles?: string[];
   createdAt?: string;
   updatedAt?: string;
   [key: string]: unknown;
@@ -19,6 +23,7 @@ export interface LinklyUser {
 export interface AuthResponse {
   token?: string;
   accessToken?: string;
+  tokenType?: string;
   user?: LinklyUser;
   data?: {
     token?: string;
@@ -31,7 +36,7 @@ export interface AuthResponse {
 }
 
 export interface RegisterPayload {
-  name: string;
+  workspaceName: string;
   email: string;
   password: string;
 }
@@ -43,7 +48,7 @@ export interface LoginPayload {
 
 export interface OtpVerificationPayload {
   email: string;
-  otp: string;
+  code: string;
 }
 
 export interface ShortLink {
@@ -52,10 +57,12 @@ export interface ShortLink {
   shortCode?: string;
   shortUrl?: string;
   url?: string;
+  destinationUrl?: string;
   originalUrl?: string;
   longUrl?: string;
   destination?: string;
   slug?: string;
+  createdAt?: string;
   [key: string]: unknown;
 }
 
@@ -65,6 +72,11 @@ export interface ShortLinkResponse extends ShortLink {
   };
   link?: ShortLink;
   message?: string;
+}
+
+export interface CreateLinkPayload {
+  url: string;
+  customAlias?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -84,7 +96,7 @@ export class ApiService {
   }
 
   logout(token: string | null): Observable<unknown> {
-    return this.post('/api/auth/logout', {}, token);
+    return this.post('/api/auth/logout', token ? { accessToken: token } : {}, token);
   }
 
   getMe(token: string | null = null): Observable<LinklyUser | null> {
@@ -93,8 +105,16 @@ export class ApiService {
     );
   }
 
-  createShortLink(originalUrl: string, token: string | null): Observable<ShortLinkResponse> {
-    return this.post<ShortLinkResponse>('/api/links', { originalUrl }, token);
+  createShortLink(
+    url: string,
+    token: string | null = null,
+    customAlias?: string,
+  ): Observable<ShortLinkResponse> {
+    const payload: CreateLinkPayload = { url };
+    if (customAlias && customAlias.trim()) {
+      payload.customAlias = customAlias.trim();
+    }
+    return this.post<ShortLinkResponse>('/api/links', payload, token);
   }
 
   formatShortUrl(response: ShortLinkResponse): string {
@@ -105,16 +125,16 @@ export class ApiService {
       return directUrl;
     }
 
-    const slug = data.slug ?? data.shortCode;
+    const slug = data.shortCode ?? data.slug;
     return slug ? `${LINKLY_API_BASE_URL}/${slug}` : '';
   }
 
   extractToken(response: AuthResponse): string | null {
     return (
-      response.token ??
       response.accessToken ??
-      response.data?.token ??
+      response.token ??
       response.data?.accessToken ??
+      response.data?.token ??
       null
     );
   }
@@ -130,7 +150,7 @@ export class ApiService {
       return authResponse.data.user;
     }
 
-    if ('email' in response || 'name' in response || 'username' in response) {
+    if ('email' in response || 'workspaceName' in response || 'name' in response || 'username' in response) {
       return response as LinklyUser;
     }
 

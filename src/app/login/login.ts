@@ -23,7 +23,7 @@ export class Login {
   readonly errorMessage = signal('');
   readonly form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, trimmedLengthValidator(6)]],
+    password: ['', [Validators.required, trimmedLengthValidator(8)]],
   });
 
   async login(): Promise<void> {

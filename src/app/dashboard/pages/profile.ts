@@ -21,9 +21,9 @@ import { AuthService } from '../../auth.service';
         </div>
         <div class="profile-avatar-card" aria-label="User profile summary">
           <div class="profile-avatar">
-            {{ initials(user?.name || user?.username || user?.email) }}
+            {{ initials(user?.workspaceName || user?.name || user?.username || user?.email) }}
           </div>
-          <strong>{{ user?.name || user?.username || 'Linkly user' }}</strong>
+          <strong>{{ user?.workspaceName || user?.name || user?.username || 'Linkly user' }}</strong>
           <span>{{ user?.email || 'Authenticated account' }}</span>
         </div>
       </div>
@@ -33,15 +33,15 @@ import { AuthService } from '../../auth.service';
           <div class="dashboard-panel-header">
             <div>
               <p class="dashboard-eyebrow">Account details</p>
-              <h2 class="dashboard-panel-title">Personal information</h2>
+              <h2 class="dashboard-panel-title">Workspace information</h2>
             </div>
             <span class="dashboard-pill">Real account</span>
           </div>
 
           <div class="profile-form-grid">
             <label class="profile-field">
-              Full name
-              <input type="text" [value]="user?.name || user?.username || ''" readonly />
+              Workspace name
+              <input type="text" [value]="user?.workspaceName || user?.name || user?.username || ''" readonly />
             </label>
             <label class="profile-field">
               Email address
