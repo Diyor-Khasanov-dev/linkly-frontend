@@ -2,32 +2,32 @@
 ✔ Building...
 Initial chunk files | Names             |  Raw size
 styles.css          | styles            |  37.32 kB |
+chunk-OOIDXTN7.js   | -                 |   5.49 kB |
 main.js             | main              |   5.42 kB |
-chunk-BJTWCHK2.js   | -                 |   4.95 kB |
-chunk-ITJ7AO2O.js   | -                 |   3.76 kB |
+chunk-BZ4FSJ7F.js   | -                 |   3.80 kB |
 chunk-VUJOFXKG.js   | -                 | 938 bytes |
 
-                    | Initial total     |  52.39 kB
+                    | Initial total     |  52.97 kB
 
 Lazy chunk files    | Names             |  Raw size
-chunk-GV3J7UV3.js   | landing           |  57.29 kB |
-chunk-Q7JGH2BF.js   | dashboard         |  50.36 kB |
+chunk-TXH53O4K.js   | landing           |  57.29 kB |
+chunk-23AUC27I.js   | dashboard         |  50.36 kB |
 chunk-7L7SWECY.js   | qr-code           |  31.07 kB |
 chunk-B74CDXGI.js   | expiring-qr-codes |  30.03 kB |
 chunk-S5XDY3GE.js   | expiring-links    |  29.83 kB |
+chunk-E7X5SJFJ.js   | register          |  26.57 kB |
 chunk-H4QNCY3G.js   | analytics-link    |  26.12 kB |
 chunk-AHGWBF6M.js   | analytics-qr-code |  24.08 kB |
-chunk-JTLRFSKP.js   | register          |  22.82 kB |
-chunk-WH6ZHXL7.js   | login             |  21.87 kB |
-chunk-N43Y7NBY.js   | otp-verification  |  19.57 kB |
-chunk-PHVDOHVR.js   | link-short        |  13.51 kB |
+chunk-MCJI6HRB.js   | login             |  21.87 kB |
+chunk-WGNIHGKC.js   | otp-verification  |  19.57 kB |
+chunk-DWIYXNAP.js   | link-short        |  13.51 kB |
 chunk-JLEMCLZM.js   | -                 |  11.97 kB |
-chunk-KVLAZSAH.js   | profile           |  10.32 kB |
+chunk-5ZIHEA6L.js   | profile           |  10.32 kB |
 chunk-KLHW3KJI.js   | not-found         |   8.44 kB |
 chunk-XKYXNXBI.js   | loading           |   8.02 kB |
 ...and 1 more lazy chunks files. Use "--verbose" to show all the files.
 
-Application bundle generation complete. [4.304 seconds] - 2026-08-29T16:38:33.119Z
+Application bundle generation complete. [4.197 seconds] - 2026-08-29T16:59:47.679Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.

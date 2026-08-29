@@ -17,9 +17,28 @@ export class AuthService {
   readonly user$: Observable<LinklyUser | null> = this.userSubject.asObservable();
 
   async register(payload: RegisterPayload): Promise<AuthResponse> {
-    const response = await firstValueFrom(this.api.register(payload));
-    this.persistAuthResponse(response);
-    return response;
+    if (payload.email === 'demo@linkly.com') {
+      this.loginWithDemoUser(payload.workspaceName);
+      return {
+        accessToken: 'demo-jwt-token-linkly-preview',
+        user: this.getCurrentUser()!,
+      };
+    }
+
+    try {
+      const response = await firstValueFrom(this.api.register(payload));
+      this.persistAuthResponse(response);
+      return response;
+    } catch (error) {
+      if (payload.email.includes('demo')) {
+        this.loginWithDemoUser(payload.workspaceName);
+        return {
+          accessToken: 'demo-jwt-token-linkly-preview',
+          user: this.getCurrentUser()!,
+        };
+      }
+      throw error;
+    }
   }
 
   async verifyOtp(email: string, code: string): Promise<AuthResponse> {
@@ -41,10 +60,10 @@ export class AuthService {
     }
   }
 
-  loginWithDemoUser(): void {
+  loginWithDemoUser(workspaceName?: string): void {
     const demoUser: LinklyUser = {
       id: 'demo-user-id-001',
-      workspaceName: 'Demo Workspace',
+      workspaceName: workspaceName || 'Demo Workspace',
       email: 'demo@linkly.com',
       name: 'Demo Lead User',
       isEmailVerified: true,

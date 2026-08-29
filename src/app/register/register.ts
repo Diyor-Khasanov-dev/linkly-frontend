@@ -33,6 +33,19 @@ export class Register {
     otp: ['', [trimmedLengthValidator(6, 6)]],
   });
 
+  fillDemoCredentials(): void {
+    this.form.patchValue({
+      workspaceName: 'Demo Workspace',
+      email: 'demo@linkly.com',
+      password: 'demo123456',
+    });
+  }
+
+  async registerWithDemo(): Promise<void> {
+    this.fillDemoCredentials();
+    await this.register();
+  }
+
   async register(): Promise<void> {
     const rawValue = this.form.getRawValue();
     const payload = {
