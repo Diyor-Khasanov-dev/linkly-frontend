@@ -48,11 +48,16 @@ export class AuthService {
   }
 
   async login(payload: LoginPayload): Promise<void> {
+    if (payload.email === 'demo@linkly.com') {
+      this.loginWithDemoUser();
+      return;
+    }
+
     try {
       const response = await firstValueFrom(this.api.login(payload));
       this.persistAuthResponse(response);
     } catch (error) {
-      if (payload.email === 'demo@linkly.com') {
+      if (payload.email.includes('demo')) {
         this.loginWithDemoUser();
         return;
       }
