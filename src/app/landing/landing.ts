@@ -1,19 +1,31 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 import { ApiService } from '../api.service';
+import { AuthService } from '../auth.service';
 import { trimValue } from '../form-utils';
 
 @Component({
   selector: 'app-landing',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './landing.html',
   styleUrl: './landing.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Landing {
   private readonly api = inject(ApiService);
+  private readonly authService = inject(AuthService);
   private readonly formBuilder = inject(NonNullableFormBuilder);
+
+  private readonly currentUser = toSignal(this.authService.user$, {
+    initialValue: this.authService.getCurrentUser(),
+  });
+
+  readonly isAuthenticated = computed(() => {
+    return Boolean(this.currentUser() || this.authService.isAuthenticated());
+  });
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal('');
