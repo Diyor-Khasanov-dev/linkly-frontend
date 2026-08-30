@@ -161,38 +161,42 @@
             [formGroup]="form"
             (ngSubmit)="shortenUrl()"
           >
+            <label for="landing-url-input" class="sr-only">URL to shorten</label>
             <input
+              id="landing-url-input"
               type="url"
               formControlName="url"
               placeholder="https://example.com/products/summer-sale"
               aria-label="URL to shorten"
-              class="flex-1 min-w-0 border-none bg-transparent outline-none px-3.5 py-3 font-mono text-sm text-ink placeholder:text-ink-faint"
+              [attr.aria-invalid]="form.controls.url.touched && form.controls.url.invalid"
+              class="flex-1 min-w-0 border-none bg-transparent outline-none px-3.5 py-3 font-mono text-sm text-ink placeholder:text-ink-faint focus:ring-2 focus:ring-accent rounded-sm2"
             />
             <button
               type="submit"
               [disabled]="isSubmitting()"
-              class="flex-shrink-0 inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-accent text-white hover:bg-accent-dark hover:-translate-y-px transition-all w-full sm:w-auto disabled:opacity-60"
+              class="flex-shrink-0 inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-accent text-white hover:bg-accent-dark hover:-translate-y-px transition-all w-full sm:w-auto disabled:opacity-60 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent"
             >
               {{ isSubmitting() ? 'Shortening…' : 'Shorten URL' }}
             </button>
           </form>
 
           @if (shortUrl()) {
-            <div class="mt-4 p-4 rounded-md2 border border-line bg-surface text-left">
+            <div class="mt-4 p-4 rounded-md2 border border-line bg-surface text-left" aria-live="polite">
               <p class="font-mono text-xs text-ink-faint uppercase">Short URL created</p>
               <div class="mt-2 flex items-center justify-between gap-3">
                 <a
                   [href]="shortUrl()"
                   target="_blank"
                   rel="noreferrer"
-                  class="font-mono font-bold text-accent text-base break-all"
+                  class="font-mono font-bold text-accent text-base break-all focus:outline-none focus:underline"
                 >
                   {{ shortUrl() }}
                 </a>
                 <button
                   type="button"
                   (click)="copyShortUrl()"
-                  class="flex-shrink-0 px-3 py-1.5 rounded-sm2 bg-ink text-white font-semibold text-xs hover:bg-[#2A2D36]"
+                  aria-label="Copy short URL to clipboard"
+                  class="flex-shrink-0 px-3 py-1.5 rounded-sm2 bg-ink text-white font-semibold text-xs hover:bg-[#2A2D36] cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent"
                 >
                   Copy
                 </button>
@@ -201,7 +205,7 @@
           }
 
           @if (errorMessage()) {
-            <p class="mt-3 text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-sm2 p-3 text-left">
+            <p class="mt-3 text-sm font-semibold text-red-600 bg-red-50 border border-red-200 rounded-sm2 p-3 text-left" role="alert" aria-live="assertive">
               {{ errorMessage() }}
             </p>
           }

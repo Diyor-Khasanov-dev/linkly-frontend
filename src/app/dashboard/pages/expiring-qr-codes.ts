@@ -1,10 +1,11 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DemoDataService } from '../../demo-data.service';
 
 @Component({
   selector: 'app-expiring-qr-codes',
   imports: [ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="demo-page-shell">
       <div class="demo-page-hero">
@@ -169,25 +170,25 @@ import { DemoDataService } from '../../demo-data.service';
             </div>
 
             <form [formGroup]="form" (ngSubmit)="createQr()" class="flex flex-col gap-4">
-              <label class="flex flex-col gap-2 text-sm font-semibold text-ink">
+              <label for="exp-qr-title-input" class="flex flex-col gap-2 text-sm font-semibold text-ink">
                 Title
-                <input class="dashboard-input" type="text" formControlName="title" placeholder="e.g. Pop-up Store Menu QR" />
+                <input id="exp-qr-title-input" class="dashboard-input" type="text" formControlName="title" placeholder="e.g. Pop-up Store Menu QR" />
               </label>
 
-              <label class="flex flex-col gap-2 text-sm font-semibold text-ink">
+              <label for="exp-qr-url-input" class="flex flex-col gap-2 text-sm font-semibold text-ink">
                 Target URL
-                <input class="dashboard-input" type="url" formControlName="targetUrl" placeholder="https://example.com/target" />
+                <input id="exp-qr-url-input" class="dashboard-input" type="url" formControlName="targetUrl" placeholder="https://example.com/target" />
               </label>
 
               <div class="grid grid-cols-2 gap-3">
-                <label class="flex flex-col gap-2 text-sm font-semibold text-ink">
+                <label for="exp-qr-days-input" class="flex flex-col gap-2 text-sm font-semibold text-ink">
                   Expires In (Days)
-                  <input class="dashboard-input" type="number" min="1" max="90" formControlName="expiresAtDays" />
+                  <input id="exp-qr-days-input" class="dashboard-input" type="number" min="1" max="90" formControlName="expiresAtDays" />
                 </label>
 
-                <label class="flex flex-col gap-2 text-sm font-semibold text-ink">
+                <label for="exp-qr-scans-input" class="flex flex-col gap-2 text-sm font-semibold text-ink">
                   Max Scans (Optional)
-                  <input class="dashboard-input" type="number" min="1" formControlName="maxScans" placeholder="Unlimited" />
+                  <input id="exp-qr-scans-input" class="dashboard-input" type="number" min="1" formControlName="maxScans" placeholder="Unlimited" />
                 </label>
               </div>
 

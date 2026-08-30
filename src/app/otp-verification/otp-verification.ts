@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -11,6 +11,7 @@ import { normalizeEmail, trimValue, trimmedLengthValidator } from '../form-utils
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './otp-verification.html',
   styleUrl: './otp-verification.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OtpVerification implements OnInit {
   private readonly api = inject(ApiService);

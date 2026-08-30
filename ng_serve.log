@@ -1,33 +1,33 @@
 ❯ Building...
 ✔ Building...
 Initial chunk files | Names             |  Raw size
-styles.css          | styles            |  37.32 kB |
+styles.css          | styles            |  38.26 kB |
+main.js             | main              |   5.50 kB |
 chunk-OOIDXTN7.js   | -                 |   5.49 kB |
-main.js             | main              |   5.42 kB |
 chunk-BZ4FSJ7F.js   | -                 |   3.80 kB |
 chunk-VUJOFXKG.js   | -                 | 938 bytes |
 
-                    | Initial total     |  52.97 kB
+                    | Initial total     |  53.99 kB
 
 Lazy chunk files    | Names             |  Raw size
-chunk-TXH53O4K.js   | landing           |  57.29 kB |
-chunk-23AUC27I.js   | dashboard         |  50.36 kB |
-chunk-7L7SWECY.js   | qr-code           |  31.07 kB |
-chunk-B74CDXGI.js   | expiring-qr-codes |  30.03 kB |
-chunk-S5XDY3GE.js   | expiring-links    |  29.83 kB |
-chunk-E7X5SJFJ.js   | register          |  26.57 kB |
-chunk-H4QNCY3G.js   | analytics-link    |  26.12 kB |
-chunk-AHGWBF6M.js   | analytics-qr-code |  24.08 kB |
-chunk-MCJI6HRB.js   | login             |  21.87 kB |
-chunk-WGNIHGKC.js   | otp-verification  |  19.57 kB |
-chunk-DWIYXNAP.js   | link-short        |  13.51 kB |
+chunk-RKCF23PB.js   | landing           |  58.69 kB |
+chunk-JJ7BLJKQ.js   | dashboard         |  51.20 kB |
+chunk-YCWULZSK.js   | qr-code           |  31.41 kB |
+chunk-7RF2SEBC.js   | expiring-qr-codes |  30.79 kB |
+chunk-RA7ZESTH.js   | expiring-links    |  30.55 kB |
+chunk-PJPFZDBP.js   | register          |  28.79 kB |
+chunk-NRIWV4RT.js   | analytics-link    |  26.25 kB |
+chunk-X7357ALV.js   | analytics-qr-code |  24.21 kB |
+chunk-L6G2LBEC.js   | login             |  23.18 kB |
+chunk-CBYEHUFM.js   | otp-verification  |  20.83 kB |
+chunk-SS3JFU5E.js   | link-short        |  14.63 kB |
 chunk-JLEMCLZM.js   | -                 |  11.97 kB |
-chunk-5ZIHEA6L.js   | profile           |  10.32 kB |
+chunk-XRF6G2B2.js   | profile           |  10.84 kB |
 chunk-KLHW3KJI.js   | not-found         |   8.44 kB |
 chunk-XKYXNXBI.js   | loading           |   8.02 kB |
 ...and 1 more lazy chunks files. Use "--verbose" to show all the files.
 
-Application bundle generation complete. [4.197 seconds] - 2026-08-29T16:59:47.679Z
+Application bundle generation complete. [4.290 seconds] - 2026-08-30T04:56:26.416Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.

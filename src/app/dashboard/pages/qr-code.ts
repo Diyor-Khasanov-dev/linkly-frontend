@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DemoDataService } from '../../demo-data.service';
 
@@ -28,9 +28,10 @@ import { DemoDataService } from '../../demo-data.service';
               <span class="font-mono text-[11px] text-accent font-bold">Vector SVG Output</span>
             </div>
 
-            <label class="mt-5 flex flex-col gap-2 font-bold text-ink">
+            <label for="qr-title-input" class="mt-5 flex flex-col gap-2 font-bold text-ink">
               QR Code Title
               <input
+                id="qr-title-input"
                 class="dashboard-input"
                 type="text"
                 formControlName="title"
@@ -38,9 +39,10 @@ import { DemoDataService } from '../../demo-data.service';
               />
             </label>
 
-            <label class="mt-4 flex flex-col gap-2 font-bold text-ink">
+            <label for="qr-target-input" class="mt-4 flex flex-col gap-2 font-bold text-ink">
               Target URL or Text
               <input
+                id="qr-target-input"
                 class="dashboard-input"
                 type="url"
                 formControlName="targetUrl"
@@ -219,6 +221,7 @@ import { DemoDataService } from '../../demo-data.service';
       </div>
     </section>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QrCode {
   readonly demoService = inject(DemoDataService);

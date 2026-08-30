@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { AuthService } from '../../auth.service';
@@ -7,6 +7,7 @@ import { AuthService } from '../../auth.service';
 @Component({
   selector: 'app-profile',
   imports: [AsyncPipe, RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @let user = authService.user$ | async;
     <section class="profile-page-shell">
@@ -39,21 +40,21 @@ import { AuthService } from '../../auth.service';
           </div>
 
           <div class="profile-form-grid">
-            <label class="profile-field">
+            <label for="prof-workspace" class="profile-field">
               Workspace name
-              <input type="text" [value]="user?.workspaceName || user?.name || user?.username || ''" readonly />
+              <input id="prof-workspace" type="text" [value]="user?.workspaceName || user?.name || user?.username || ''" readonly />
             </label>
-            <label class="profile-field">
+            <label for="prof-email" class="profile-field">
               Email address
-              <input type="email" [value]="user?.email || ''" readonly />
+              <input id="prof-email" type="email" [value]="user?.email || ''" readonly />
             </label>
-            <label class="profile-field">
+            <label for="prof-id" class="profile-field">
               Account ID
-              <input type="text" [value]="user?.id || user?._id || ''" readonly />
+              <input id="prof-id" type="text" [value]="user?.id || user?._id || ''" readonly />
             </label>
-            <label class="profile-field">
+            <label for="prof-tz" class="profile-field">
               Time zone
-              <input type="text" value="UTC" readonly />
+              <input id="prof-tz" type="text" value="UTC" readonly />
             </label>
           </div>
 
