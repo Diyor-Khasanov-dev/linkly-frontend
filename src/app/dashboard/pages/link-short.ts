@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ApiService } from '../../api.service';
@@ -25,19 +25,22 @@ import { trimValue } from '../../form-utils';
       <div class="demo-page-grid">
         <form class="demo-feature-card" [formGroup]="form" (ngSubmit)="shorten()">
           <span>Destination URL</span>
-          <label class="mt-5 flex flex-col gap-3 font-bold text-ink">
+          <label for="shortener-long-url" class="mt-5 flex flex-col gap-3 font-bold text-ink">
             Long link
             <input
+              id="shortener-long-url"
               class="dashboard-input"
               type="url"
               formControlName="url"
               placeholder="https://example.com/very/long/link"
               autocomplete="url"
+              [attr.aria-invalid]="form.controls.url.touched && form.controls.url.invalid"
             />
           </label>
-          <label class="mt-4 flex flex-col gap-3 font-bold text-ink">
+          <label for="shortener-alias" class="mt-4 flex flex-col gap-3 font-bold text-ink">
             Custom alias (optional)
             <input
+              id="shortener-alias"
               class="dashboard-input"
               type="text"
               formControlName="customAlias"
@@ -45,7 +48,7 @@ import { trimValue } from '../../form-utils';
             />
           </label>
           <button
-            class="dashboard-primary-button mt-5 w-full"
+            class="dashboard-primary-button mt-5 w-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent"
             type="submit"
             [disabled]="isSubmitting()"
           >
@@ -54,6 +57,8 @@ import { trimValue } from '../../form-utils';
           @if (errorMessage()) {
             <p
               class="mt-4 rounded-sm2 border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"
+              role="alert"
+              aria-live="assertive"
             >
               {{ errorMessage() }}
             </p>
@@ -69,7 +74,7 @@ import { trimValue } from '../../form-utils';
             <span class="dashboard-pill">Bearer token ready</span>
           </div>
           @if (shortUrl()) {
-            <div class="mt-6 rounded-md2 border border-line bg-bg p-5">
+            <div class="mt-6 rounded-md2 border border-line bg-bg p-5" aria-live="polite">
               <p class="font-mono text-xs uppercase tracking-[0.14em] text-ink-faint">Short URL</p>
               <a
                 class="mt-2 block break-all font-mono text-lg font-bold text-accent"
@@ -80,9 +85,10 @@ import { trimValue } from '../../form-utils';
                 {{ shortUrl() }}
               </a>
               <button
-                class="dashboard-secondary-button mt-4"
+                class="dashboard-secondary-button mt-4 cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent"
                 type="button"
                 (click)="copyShortUrl()"
+                aria-label="Copy short link to clipboard"
               >
                 Copy link
               </button>
@@ -100,6 +106,7 @@ import { trimValue } from '../../form-utils';
       </div>
     </section>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinkShort {
   private readonly api = inject(ApiService);

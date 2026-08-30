@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ApiService } from '../api.service';
@@ -9,6 +9,7 @@ import { trimValue } from '../form-utils';
   imports: [ReactiveFormsModule],
   templateUrl: './landing.html',
   styleUrl: './landing.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Landing {
   private readonly api = inject(ApiService);

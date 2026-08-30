@@ -16,40 +16,42 @@
         </div>
       </div>
 
-      <nav class="sidebar-nav" aria-label="Dashboard demo pages">
-        <a routerLink="/dashboard/link-short" routerLinkActive="is-active" class="sidebar-link">
+      <nav class="sidebar-nav" aria-label="Dashboard navigation">
+        <a routerLink="/dashboard/link-short" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact: true}" aria-label="Link Short tool" class="sidebar-link">
           <span class="sidebar-icon sidebar-icon-link" aria-hidden="true"></span
           ><span>Link Short</span><em>248</em>
         </a>
-        <a routerLink="/dashboard/qr-code" routerLinkActive="is-active" class="sidebar-link">
+        <a routerLink="/dashboard/qr-code" routerLinkActive="is-active" aria-label="QR Code Generator" class="sidebar-link">
           <span class="sidebar-icon sidebar-icon-qr" aria-hidden="true"></span><span>QR Code</span
           ><em>96</em>
         </a>
-        <a routerLink="/dashboard/analytics-link" routerLinkActive="is-active" class="sidebar-link">
+        <a routerLink="/dashboard/analytics-link" routerLinkActive="is-active" aria-label="Link Analytics" class="sidebar-link">
           <span class="sidebar-icon sidebar-icon-chart" aria-hidden="true"></span
           ><span>Analytics Link</span><em>12.4K</em>
         </a>
         <a
           routerLink="/dashboard/analytics-qr-code"
           routerLinkActive="is-active"
+          aria-label="QR Code Analytics"
           class="sidebar-link"
         >
           <span class="sidebar-icon sidebar-icon-qr-chart" aria-hidden="true"></span
           ><span>Analytics QR Code</span><em>3.9K</em>
         </a>
-        <a routerLink="/dashboard/expiring-links" routerLinkActive="is-active" class="sidebar-link">
+        <a routerLink="/dashboard/expiring-links" routerLinkActive="is-active" aria-label="Expiring Links" class="sidebar-link">
           <span class="sidebar-icon sidebar-icon-clock" aria-hidden="true"></span
           ><span>Expiring Links</span><em>17</em>
         </a>
         <a
           routerLink="/dashboard/expiring-qr-codes"
           routerLinkActive="is-active"
+          aria-label="Expiring QR Codes"
           class="sidebar-link"
         >
           <span class="sidebar-icon sidebar-icon-hourglass" aria-hidden="true"></span
           ><span>Expiring QR Codes</span><em>11</em>
         </a>
-        <a routerLink="/dashboard/profile" routerLinkActive="is-active" class="sidebar-link">
+        <a routerLink="/dashboard/profile" routerLinkActive="is-active" aria-label="User Profile" class="sidebar-link">
           <span class="sidebar-icon sidebar-icon-user" aria-hidden="true"></span><span>Profile</span
           ><em>Demo</em>
         </a>

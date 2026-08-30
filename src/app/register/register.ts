@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
@@ -16,6 +16,7 @@ import {
   imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Register {
   private readonly api = inject(ApiService);

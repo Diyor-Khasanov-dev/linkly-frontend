@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { DemoDataService } from '../../demo-data.service';
 
 @Component({
   selector: 'app-analytics-qr-code',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="demo-page-shell">
       <div class="demo-page-hero">

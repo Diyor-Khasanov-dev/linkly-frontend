@@ -1,10 +1,11 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DemoDataService } from '../../demo-data.service';
 
 @Component({
   selector: 'app-expiring-links',
   imports: [ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="demo-page-shell">
       <div class="demo-page-hero">
@@ -167,25 +168,25 @@ import { DemoDataService } from '../../demo-data.service';
             </div>
 
             <form [formGroup]="form" (ngSubmit)="createLink()" class="flex flex-col gap-4">
-              <label class="flex flex-col gap-2 text-sm font-semibold text-ink">
+              <label for="exp-title-input" class="flex flex-col gap-2 text-sm font-semibold text-ink">
                 Title
-                <input class="dashboard-input" type="text" formControlName="title" placeholder="e.g. Flash Promo Link" />
+                <input id="exp-title-input" class="dashboard-input" type="text" formControlName="title" placeholder="e.g. Flash Promo Link" />
               </label>
 
-              <label class="flex flex-col gap-2 text-sm font-semibold text-ink">
+              <label for="exp-url-input" class="flex flex-col gap-2 text-sm font-semibold text-ink">
                 Destination URL
-                <input class="dashboard-input" type="url" formControlName="originalUrl" placeholder="https://example.com/target" />
+                <input id="exp-url-input" class="dashboard-input" type="url" formControlName="originalUrl" placeholder="https://example.com/target" />
               </label>
 
               <div class="grid grid-cols-2 gap-3">
-                <label class="flex flex-col gap-2 text-sm font-semibold text-ink">
+                <label for="exp-days-input" class="flex flex-col gap-2 text-sm font-semibold text-ink">
                   Expires In (Days)
-                  <input class="dashboard-input" type="number" min="1" max="90" formControlName="expiresAtDays" />
+                  <input id="exp-days-input" class="dashboard-input" type="number" min="1" max="90" formControlName="expiresAtDays" />
                 </label>
 
-                <label class="flex flex-col gap-2 text-sm font-semibold text-ink">
+                <label for="exp-clicks-input" class="flex flex-col gap-2 text-sm font-semibold text-ink">
                   Max Clicks (Optional)
-                  <input class="dashboard-input" type="number" min="1" formControlName="maxClicks" placeholder="Unlimited" />
+                  <input id="exp-clicks-input" class="dashboard-input" type="number" min="1" formControlName="maxClicks" placeholder="Unlimited" />
                 </label>
               </div>
 

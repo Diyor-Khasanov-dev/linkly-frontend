@@ -39,26 +39,30 @@
         </p>
 
         <form class="mt-7 flex flex-col gap-4" [formGroup]="form" (ngSubmit)="verifyOtp()">
-          <label class="flex flex-col gap-2 text-sm font-semibold text-ink"
+          <label for="otp-email" class="flex flex-col gap-2 text-sm font-semibold text-ink"
             >Email address<input
+              id="otp-email"
               type="email"
               formControlName="email"
               placeholder="you@example.com"
               autocomplete="email"
-              class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm text-ink outline-none focus:border-accent"
+              [attr.aria-invalid]="form.controls.email.touched && form.controls.email.invalid"
+              class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent"
           /></label>
-          <label class="flex flex-col gap-2 text-sm font-semibold text-ink"
+          <label for="otp-code" class="flex flex-col gap-2 text-sm font-semibold text-ink"
             >OTP verification code<input
+              id="otp-code"
               type="text"
               formControlName="code"
               placeholder="6-digit code"
               maxlength="6"
               autocomplete="one-time-code"
-              class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm tracking-widest text-ink outline-none focus:border-accent"
+              [attr.aria-invalid]="form.controls.code.touched && form.controls.code.invalid"
+              class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm tracking-widest text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent"
           /></label>
           <button
             type="submit"
-            class="mt-2 inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-accent text-white hover:bg-accent-dark hover:-translate-y-px transition-all"
+            class="mt-2 inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-accent text-white hover:bg-accent-dark hover:-translate-y-px transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent"
             [disabled]="isSubmitting()"
             [class.opacity-70]="isSubmitting()"
           >
@@ -70,6 +74,8 @@
         @if (errorMessage()) {
           <p
             class="mt-4 rounded-sm2 border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"
+            role="alert"
+            aria-live="assertive"
           >
             {{ errorMessage() }}
           </p>
