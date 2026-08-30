@@ -76,11 +76,6 @@ export class Register {
     try {
       await this.authService.register(payload);
 
-      if (this.authService.isAuthenticated()) {
-        await this.router.navigate(['/dashboard']);
-        return;
-      }
-
       await this.router.navigate(['/otp-verification'], {
         queryParams: { email: payload.email },
       });

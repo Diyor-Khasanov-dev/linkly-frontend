@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { normalizeEmail, trimValue, trimmedLengthValidator } from '../form-utils
   styleUrl: './login.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Login {
+export class Login implements OnInit {
   private readonly api = inject(ApiService);
   private readonly authService = inject(AuthService);
   private readonly formBuilder = inject(NonNullableFormBuilder);
@@ -22,10 +22,23 @@ export class Login {
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal('');
+  readonly noticeMessage = signal('');
   readonly form = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, trimmedLengthValidator(8)]],
   });
+
+  ngOnInit(): void {
+    const queryEmail = this.route.snapshot.queryParamMap.get('email');
+    if (queryEmail) {
+      this.form.patchValue({ email: normalizeEmail(queryEmail) });
+    }
+
+    const verified = this.route.snapshot.queryParamMap.get('verified');
+    if (verified === 'true') {
+      this.noticeMessage.set('Email verified successfully! Please log in to continue.');
+    }
+  }
 
   fillDemoCredentials(): void {
     this.form.patchValue({

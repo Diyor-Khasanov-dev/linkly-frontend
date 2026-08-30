@@ -2,33 +2,50 @@
 ✔ Building...
 Initial chunk files | Names             |  Raw size
 styles.css          | styles            |  38.26 kB |
-main.js             | main              |   5.50 kB |
-chunk-OOIDXTN7.js   | -                 |   5.49 kB |
+main.js             | main              |   5.83 kB |
+chunk-RYR5PQ6T.js   | -                 |   5.58 kB |
 chunk-BZ4FSJ7F.js   | -                 |   3.80 kB |
 chunk-VUJOFXKG.js   | -                 | 938 bytes |
 
-                    | Initial total     |  53.99 kB
+                    | Initial total     |  54.41 kB
 
 Lazy chunk files    | Names             |  Raw size
 chunk-RKCF23PB.js   | landing           |  58.69 kB |
-chunk-JJ7BLJKQ.js   | dashboard         |  51.20 kB |
+chunk-2ENP4LXB.js   | dashboard         |  51.20 kB |
 chunk-YCWULZSK.js   | qr-code           |  31.41 kB |
 chunk-7RF2SEBC.js   | expiring-qr-codes |  30.79 kB |
 chunk-RA7ZESTH.js   | expiring-links    |  30.55 kB |
-chunk-PJPFZDBP.js   | register          |  28.79 kB |
+chunk-HQZFL3TO.js   | register          |  28.67 kB |
 chunk-NRIWV4RT.js   | analytics-link    |  26.25 kB |
+chunk-FSGESKZG.js   | login             |  24.71 kB |
 chunk-X7357ALV.js   | analytics-qr-code |  24.21 kB |
-chunk-L6G2LBEC.js   | login             |  23.18 kB |
-chunk-CBYEHUFM.js   | otp-verification  |  20.83 kB |
-chunk-SS3JFU5E.js   | link-short        |  14.63 kB |
+chunk-LRXMIKKN.js   | otp-verification  |  20.89 kB |
+chunk-XDWK475M.js   | link-short        |  14.63 kB |
 chunk-JLEMCLZM.js   | -                 |  11.97 kB |
-chunk-XRF6G2B2.js   | profile           |  10.84 kB |
+chunk-EERXGGWF.js   | profile           |  10.84 kB |
 chunk-KLHW3KJI.js   | not-found         |   8.44 kB |
 chunk-XKYXNXBI.js   | loading           |   8.02 kB |
 ...and 1 more lazy chunks files. Use "--verbose" to show all the files.
 
-Application bundle generation complete. [4.290 seconds] - 2026-08-30T04:56:26.416Z
+Application bundle generation complete. [5.208 seconds] - 2026-08-30T05:47:02.822Z
 
 Watch mode enabled. Watching for file changes...
 NOTE: Raw file sizes do not reflect development server per-request transformations.
   ➜  Local:   http://localhost:4200/
+❯ Changes detected. Rebuilding...
+✔ Changes detected. Rebuilding...
+Initial chunk files | Names            | Raw size
+chunk-2NK5TBFU.js   | -                |  6.49 kB |
+main.js             | main             |  5.83 kB |
+
+Lazy chunk files    | Names            | Raw size
+chunk-WXNN6YPJ.js   | dashboard        | 51.20 kB |
+chunk-2DPARQKK.js   | register         | 28.67 kB |
+chunk-6HYSUDAY.js   | login            | 24.71 kB |
+chunk-WZJNJYTL.js   | otp-verification | 20.89 kB |
+chunk-QG5IJJGX.js   | link-short       | 14.63 kB |
+chunk-47FGHU24.js   | profile          | 10.84 kB |
+
+Application bundle generation complete. [1.125 seconds] - 2026-08-30T05:51:18.156Z
+
+Page reload sent to client(s).

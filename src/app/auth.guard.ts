@@ -15,3 +15,14 @@ export const authGuard: CanActivateFn = (_route, state) => {
     queryParams: { returnUrl: state.url },
   });
 };
+
+export const guestGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
+
+  if (authService.isAuthenticated()) {
+    return router.createUrlTree(['/dashboard']);
+  }
+
+  return true;
+};

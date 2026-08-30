@@ -48,7 +48,9 @@ describe('OtpVerification Component Unit Tests', () => {
     await component.verifyOtp();
 
     expect(mockAuthService.verifyOtp).toHaveBeenCalledWith('user@test.com', '123456');
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/dashboard']);
+    expect(mockRouter.navigate).toHaveBeenCalledWith(['/login'], {
+      queryParams: { email: 'user@test.com', verified: 'true' },
+    });
   });
 
   it('handles failed verifyOtp flow with error message', async () => {

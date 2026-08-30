@@ -56,7 +56,9 @@ export class OtpVerification implements OnInit {
 
     try {
       await this.authService.verifyOtp(email, code);
-      await this.router.navigate(['/dashboard']);
+      await this.router.navigate(['/login'], {
+        queryParams: { email, verified: 'true' },
+      });
     } catch (error) {
       this.errorMessage.set(this.api.extractErrorMessage(error));
     } finally {
