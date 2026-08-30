@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
 import { authGuard } from './auth.guard';
+import { guestGuard } from './guest.guard';
 
 export const routes: Routes = [
   {
@@ -11,16 +12,19 @@ export const routes: Routes = [
   {
     path: 'login',
     title: 'Log in — Linkly',
+    canActivate: [guestGuard],
     loadComponent: () => import('./login/login').then((component) => component.Login),
   },
   {
     path: 'register',
     title: 'Register — Linkly',
+    canActivate: [guestGuard],
     loadComponent: () => import('./register/register').then((component) => component.Register),
   },
   {
     path: 'otp-verification',
     title: 'OTP Verification — Linkly',
+    canActivate: [guestGuard],
     loadComponent: () =>
       import('./otp-verification/otp-verification').then((component) => component.OtpVerification),
   },
