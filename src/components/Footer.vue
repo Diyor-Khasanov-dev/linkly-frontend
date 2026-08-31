@@ -21,9 +21,6 @@ import { Link2, Github, Twitter, ArrowUpRight } from 'lucide-vue-next'
             <a href="https://github.com/Diyor-Khasanov-dev/linkly-frontend" target="_blank" rel="noopener" class="p-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-color)] hover:text-[var(--text-primary)] transition">
               <Github class="w-4 h-4" />
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener" class="p-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-color)] hover:text-[var(--text-primary)] transition">
-              <Twitter class="w-4 h-4" />
-            </a>
           </div>
         </div>
 
