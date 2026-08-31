@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import QRCode from 'qrcode'
 import {
   Link2,
@@ -14,6 +15,10 @@ import {
   ShieldCheck,
   Zap
 } from 'lucide-vue-next'
+import { useAuth } from '../composables/useAuth'
+
+const router = useRouter()
+const { isAuthenticated } = useAuth()
 
 const longUrl = ref('')
 const customAlias = ref('')
@@ -37,12 +42,20 @@ onMounted(() => {
   generateQRCode()
 })
 
+const handleWidgetAction = () => {
+  if (isAuthenticated.value) {
+    router.push('/dashboard')
+  } else {
+    router.push('/register')
+  }
+}
+
 const handleShorten = () => {
-  window.location.href = '/register'
+  handleWidgetAction()
 }
 
 const handleRedirectToRegister = () => {
-  window.location.href = '/register'
+  handleWidgetAction()
 }
 
 const generateQRCode = async () => {
