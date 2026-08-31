@@ -20,7 +20,7 @@ const { isAuthenticated } = useAuth()
         <!-- Top Tag Pill -->
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-800/80 border border-zinc-700/80 text-xs font-medium text-zinc-300 shadow-sm">
           <span class="flex h-2 w-2 rounded-full bg-blue-400 animate-pulse"></span>
-          <span>Linkly v3.5 Released — Shorten, Analyze & Custom QR Studio</span>
+          <span>Linkly v1.0 Released</span>
           <Sparkles class="w-3.5 h-3.5 text-blue-500" />
         </div>
 
