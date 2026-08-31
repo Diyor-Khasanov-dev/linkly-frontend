@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 import {
@@ -17,8 +17,12 @@ import {
 } from 'lucide-vue-next'
 
 const router = useRouter()
-const { currentUser, logout } = useAuth()
+const { currentUser, logout, fetchUser } = useAuth()
 const isMobileOpen = ref(false)
+
+onMounted(() => {
+  fetchUser()
+})
 
 const navigation = [
   {
@@ -59,8 +63,8 @@ const navigation = [
   },
 ]
 
-const handleLogout = () => {
-  logout()
+const handleLogout = async () => {
+  await logout()
   isMobileOpen.value = false
   router.push('/login')
 }
@@ -182,11 +186,11 @@ const handleLogout = () => {
       <div class="p-3 border-t border-[var(--border-color)] bg-[var(--bg-primary)] shrink-0 space-y-2">
         <div class="flex items-center gap-2.5 px-2 py-1.5 min-w-0">
           <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0">
-            {{ (currentUser?.name || currentUser?.email || 'User').charAt(0) }}
+            {{ (currentUser?.workspaceName || currentUser?.email || 'U').charAt(0) }}
           </div>
           <div class="flex flex-col min-w-0">
             <span class="text-xs font-semibold text-[var(--text-primary)] truncate">
-              {{ currentUser?.name || 'Account' }}
+              {{ currentUser?.workspaceName || 'My Workspace' }}
             </span>
             <span class="text-[11px] text-[var(--text-secondary)] truncate">
               {{ currentUser?.email || 'user@linkly.com' }}

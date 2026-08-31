@@ -2,12 +2,12 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
-import { Link2, Mail, Lock, User, ArrowRight, CheckCircle2 } from 'lucide-vue-next'
+import { Link2, Mail, Lock, Building2, ArrowRight, CheckCircle2 } from 'lucide-vue-next'
 
 const router = useRouter()
 const { register, isLoading } = useAuth()
 
-const name = ref('')
+const workspaceName = ref('')
 const email = ref('')
 const password = ref('')
 const agreeTerms = ref(true)
@@ -20,11 +20,16 @@ const handleRegister = async () => {
     return
   }
 
-  const res = await register(email.value, password.value)
+  if (password.value.length < 8) {
+    errorMessage.value = 'Password must be at least 8 characters'
+    return
+  }
+
+  const res = await register(workspaceName.value || 'My Workspace', email.value, password.value)
   if (res.success) {
     router.push({ path: '/otp-verification', query: { email: email.value } })
   } else {
-    errorMessage.value = 'Registration failed. Please try again.'
+    errorMessage.value = res.error || 'Registration failed. Please try again.'
   }
 }
 </script>
@@ -56,15 +61,15 @@ const handleRegister = async () => {
       <!-- Form -->
       <form class="mt-6 space-y-4" @submit.prevent="handleRegister">
         <div class="space-y-1">
-          <label class="block text-xs font-semibold text-zinc-300">Full Name</label>
+          <label class="block text-xs font-semibold text-zinc-300">Workspace Name</label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
-              <User class="w-4 h-4" />
+              <Building2 class="w-4 h-4" />
             </div>
             <input
-              v-model="name"
+              v-model="workspaceName"
               type="text"
-              placeholder="John Doe"
+              placeholder="Acme Workspace"
               class="w-full pl-9 pr-3 py-2.5 bg-zinc-800/80 border border-zinc-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-100 placeholder-zinc-500 transition"
             />
           </div>
@@ -96,6 +101,7 @@ const handleRegister = async () => {
               v-model="password"
               type="password"
               required
+              minlength="8"
               placeholder="••••••••"
               class="w-full pl-9 pr-3 py-2.5 bg-zinc-800/80 border border-zinc-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-100 placeholder-zinc-500 transition"
             />
