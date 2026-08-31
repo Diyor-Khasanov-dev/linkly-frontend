@@ -117,6 +117,14 @@ export class ApiService {
     return this.post<ShortLinkResponse>('/api/links', payload, token);
   }
 
+  getQrCodeUrl(url: string): string {
+    return `${LINKLY_API_BASE_URL}/api/qr?url=${encodeURIComponent(url)}`;
+  }
+
+  getShortLinkQrCodeUrl(shortCode: string): string {
+    return `${LINKLY_API_BASE_URL}/api/links/${encodeURIComponent(shortCode)}/qrcode`;
+  }
+
   formatShortUrl(response: ShortLinkResponse): string {
     const data = response.data?.link ?? response.data ?? response.link ?? response;
     const directUrl = data.shortUrl ?? data.url;
