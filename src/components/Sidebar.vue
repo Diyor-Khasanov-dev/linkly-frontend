@@ -177,16 +177,6 @@ const handleLogout = () => {
           </router-link>
         </nav>
 
-        <!-- Pro Upgrade Box Banner -->
-        <div class="m-3 p-3.5 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-800/90 border border-zinc-800 text-xs space-y-2 mt-auto shrink-0">
-          <div class="flex items-center gap-2 text-zinc-100 font-semibold">
-            <Sparkles class="w-4 h-4 text-amber-400 fill-amber-400/20" />
-            <span>Linkly Pro</span>
-          </div>
-          <p class="text-[11px] text-zinc-400 leading-relaxed">
-            Unlock custom branded domains, unlimited QR downloads & deep analytics.
-          </p>
-        </div>
       </div>
 
       <!-- Bottom User Profile & Logout Bar -->
