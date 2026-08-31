@@ -145,29 +145,29 @@ const regenerateKey = () => {
         Use your secret API key to authenticate programmatically with the Linkly API endpoints.
       </p>
 
-      <div class="flex flex-col sm:flex-row items-center gap-3">
-        <div class="w-full flex-1 relative">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div class="w-full flex-1 min-w-0 relative">
           <input
             :value="apiKey"
             readonly
             type="text"
-            class="w-full px-3.5 py-2.5 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-xs font-mono text-[var(--text-primary)] select-all focus:outline-none"
+            class="w-full px-3.5 py-2.5 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-xs font-mono text-[var(--text-primary)] select-all focus:outline-none truncate"
           />
         </div>
 
-        <div class="flex items-center gap-2 w-full sm:w-auto">
+        <div class="flex items-center gap-2 w-full sm:w-auto shrink-0">
           <button
             @click="copyApiKey"
             class="flex-1 sm:flex-initial px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer"
           >
-            <Check v-if="isCopiedKey" class="w-3.5 h-3.5 text-emerald-400" />
-            <Copy v-else class="w-3.5 h-3.5" />
+            <Check v-if="isCopiedKey" class="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <Copy v-else class="w-3.5 h-3.5 shrink-0" />
             <span>{{ isCopiedKey ? 'Copied' : 'Copy Key' }}</span>
           </button>
 
           <button
             @click="regenerateKey"
-            class="p-2.5 bg-[var(--bg-primary)] hover:bg-zinc-800 border border-[var(--border-color)] text-zinc-300 rounded-xl text-xs font-medium transition cursor-pointer"
+            class="p-2.5 bg-[var(--bg-primary)] hover:bg-zinc-800 border border-[var(--border-color)] text-zinc-300 rounded-xl text-xs font-medium transition cursor-pointer shrink-0"
             title="Roll API Key"
           >
             <RefreshCw class="w-4 h-4" />

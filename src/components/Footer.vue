@@ -5,16 +5,16 @@ import { Link2, Github, ArrowUpRight } from 'lucide-vue-next'
 <template>
   <footer class="border-t border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] py-12 transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-8 pb-12 border-b border-[var(--border-color)]">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 pb-12 border-b border-[var(--border-color)]">
         <!-- Brand Info -->
-        <div class="md:col-span-2 space-y-4">
+        <div class="col-span-2 sm:col-span-3 md:col-span-2 space-y-4">
           <a href="#" class="flex items-center gap-2.5 font-bold text-xl text-[var(--text-primary)]">
             <div class="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-900 shadow-sm">
               <Link2 class="w-5 h-5 stroke-[2.5]" />
             </div>
             <span class="font-semibold text-lg">Linkly<span class="text-blue-500">.</span></span>
           </a>
-          <p class="text-sm max-w-sm text-[var(--text-secondary)] leading-relaxed">
+          <p class="text-xs sm:text-sm max-w-sm text-[var(--text-secondary)] leading-relaxed">
             Minimalist URL Shortener, Real-time Analytics, and Custom QR Code Generator. Built for speed, clarity, and precision.
           </p>
           <div class="flex items-center gap-3 pt-2">
@@ -25,9 +25,9 @@ import { Link2, Github, ArrowUpRight } from 'lucide-vue-next'
         </div>
 
         <!-- Product Links -->
-        <div>
-          <h3 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] mb-4">Product</h3>
-          <ul class="space-y-2.5 text-sm">
+        <div class="col-span-1">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] mb-3 sm:mb-4">Product</h3>
+          <ul class="space-y-2 text-xs sm:text-sm">
             <li><a href="#shortener" class="hover:text-[var(--text-primary)] transition">URL Shortener</a></li>
             <li><a href="#analyzer" class="hover:text-[var(--text-primary)] transition">Link Analytics</a></li>
             <li><a href="#qr-generator" class="hover:text-[var(--text-primary)] transition">QR Code Studio</a></li>
@@ -36,24 +36,24 @@ import { Link2, Github, ArrowUpRight } from 'lucide-vue-next'
         </div>
 
         <!-- Solutions Links -->
-        <div>
-          <h3 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] mb-4">Solutions</h3>
-          <ul class="space-y-2.5 text-sm">
+        <div class="col-span-1">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] mb-3 sm:mb-4">Solutions</h3>
+          <ul class="space-y-2 text-xs sm:text-sm">
             <li><a href="#" class="hover:text-[var(--text-primary)] transition flex items-center gap-1">Developers <ArrowUpRight class="w-3 h-3 opacity-60" /></a></li>
             <li><a href="#" class="hover:text-[var(--text-primary)] transition flex items-center gap-1">Marketers <ArrowUpRight class="w-3 h-3 opacity-60" /></a></li>
             <li><a href="#" class="hover:text-[var(--text-primary)] transition flex items-center gap-1">Enterprise <ArrowUpRight class="w-3 h-3 opacity-60" /></a></li>
-            <li><a href="#" class="hover:text-[var(--text-primary)] transition">API Documentation</a></li>
+            <li><a href="#" class="hover:text-[var(--text-primary)] transition">API Docs</a></li>
           </ul>
         </div>
 
         <!-- Company Links -->
-        <div>
-          <h3 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] mb-4">Company</h3>
-          <ul class="space-y-2.5 text-sm">
+        <div class="col-span-1">
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] mb-3 sm:mb-4">Company</h3>
+          <ul class="space-y-2 text-xs sm:text-sm">
             <li><a href="#" class="hover:text-[var(--text-primary)] transition">About Linkly</a></li>
             <li><a href="/register" class="hover:text-[var(--text-primary)] transition">Get Started</a></li>
             <li><a href="#" class="hover:text-[var(--text-primary)] transition">Privacy Policy</a></li>
-            <li><a href="#" class="hover:text-[var(--text-primary)] transition">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-[var(--text-primary)] transition">Terms</a></li>
           </ul>
         </div>
       </div>

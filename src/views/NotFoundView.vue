@@ -3,8 +3,8 @@ import { AlertCircle, Home, ArrowLeft } from 'lucide-vue-next'
 </script>
 
 <template>
-  <div class="min-h-[calc(100vh-4rem)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-zinc-950 via-[var(--bg-primary)] to-[var(--bg-primary)]">
-    <div class="max-w-md w-full text-center space-y-6 bg-zinc-900/90 p-8 rounded-2xl border border-zinc-800 shadow-xl relative overflow-hidden">
+  <div class="min-h-[calc(100dvh-4rem)] flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-zinc-950 via-[var(--bg-primary)] to-[var(--bg-primary)]">
+    <div class="max-w-md w-full text-center space-y-6 bg-zinc-900/90 p-6 sm:p-8 rounded-2xl border border-zinc-800 shadow-xl relative overflow-hidden">
       <!-- Glow effect -->
       <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
