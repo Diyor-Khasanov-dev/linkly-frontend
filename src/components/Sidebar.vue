@@ -125,7 +125,7 @@ const handleLogout = () => {
 
         <!-- Navigation Links List -->
         <nav class="p-3 space-y-1">
-          <div class="px-3 py-2 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
+          <div class="px-3 py-2 text-[11px] font-semibold text-zinc-500 uppercase tracking-wider mb-4">
             Main Features
           </div>
 
@@ -138,7 +138,7 @@ const handleLogout = () => {
           >
             <div
               :class="[
-                'group flex items-center justify-between px-3 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-150 cursor-pointer',
+                'group mt-2 mb-2 flex items-center justify-between px-3 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-150 cursor-pointer',
                 isActive
                   ? 'bg-zinc-100 text-zinc-950 font-semibold shadow-sm'
                   : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60'
