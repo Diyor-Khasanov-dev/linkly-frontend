@@ -20,7 +20,7 @@
     <section
       class="bg-bg border border-line rounded-lg2 p-2 shadow-[0_24px_80px_rgba(29,31,38,0.08)] order-2 lg:order-1"
     >
-      <div class="bg-surface rounded-md2 p-7 sm:p-8" [formGroup]="form">
+      <div class="bg-surface rounded-md2 p-7 sm:p-8">
         <p class="font-mono text-xs tracking-[0.14em] uppercase text-accent font-medium">
           Register
         </p>
@@ -42,14 +42,14 @@
             <button
               type="button"
               (click)="registerWithDemo()"
-              class="inline-flex items-center justify-center gap-2 font-semibold text-xs px-3.5 py-2 rounded-sm2 bg-ink text-white hover:bg-[#2A2D36] transition-all"
+              class="inline-flex items-center justify-center gap-2 font-semibold text-xs px-3.5 py-2 rounded-sm2 bg-ink text-white hover:bg-[#2A2D36] transition-all cursor-pointer"
             >
               ⚡ Register as Demo User
             </button>
             <button
               type="button"
               (click)="fillDemoCredentials()"
-              class="inline-flex items-center justify-center gap-2 font-semibold text-xs px-3.5 py-2 rounded-sm2 bg-surface border border-line text-ink hover:border-ink transition-all"
+              class="inline-flex items-center justify-center gap-2 font-semibold text-xs px-3.5 py-2 rounded-sm2 bg-surface border border-line text-ink hover:border-ink transition-all cursor-pointer"
             >
               Autofill demo
             </button>
@@ -95,31 +95,7 @@
             {{ isSubmitting() ? 'Creating…' : 'Create account' }}
           </button>
         </form>
-        @if (noticeMessage()) {
-          <div class="mt-6 rounded-md2 border border-line bg-bg p-4 text-[13px] text-ink-soft" aria-live="polite">
-            <p class="font-semibold text-ink">{{ noticeMessage() }}</p>
-            <div class="mt-4 flex flex-col gap-3">
-              <label for="reg-otp" class="flex flex-col gap-2 text-sm font-semibold text-ink">
-                OTP code
-                <input
-                  id="reg-otp"
-                  type="text"
-                  formControlName="otp"
-                  placeholder="Enter verification code"
-                  class="border border-line bg-bg rounded-sm2 px-4 py-3.5 font-mono text-sm text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent"
-                />
-              </label>
-              <button
-                type="button"
-                (click)="verifyOtp()"
-                [disabled]="isSubmitting()"
-                class="inline-flex items-center justify-center gap-2 font-semibold text-[14.5px] px-[22px] py-3 rounded-sm2 bg-ink text-white hover:bg-[#2A2D36] hover:-translate-y-px transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent"
-              >
-                Verify account
-              </button>
-            </div>
-          </div>
-        }
+
         @if (errorMessage()) {
           <p
             class="mt-4 rounded-sm2 border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700"
