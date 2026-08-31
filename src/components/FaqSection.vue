@@ -33,7 +33,7 @@ const toggleFaq = (index: number) => {
 </script>
 
 <template>
-  <section class="py-16 sm:py-24 border-t border-[var(--border-color)] bg-[var(--bg-primary)] transition-colors duration-200" id="faq">
+  <section class="py-16 sm:py-24 border-t border-slate-200/80 dark:border-[var(--border-color)] bg-white dark:bg-[var(--bg-primary)] transition-colors duration-200" id="faq">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
 
       <!-- Header -->
@@ -55,7 +55,7 @@ const toggleFaq = (index: number) => {
         <div
           v-for="(faq, idx) in faqs"
           :key="idx"
-          class="border border-[var(--border-color)] rounded-2xl bg-[var(--bg-secondary)] overflow-hidden transition-all duration-200"
+          class="border border-slate-200 dark:border-[var(--border-color)] rounded-2xl bg-slate-50/70 dark:bg-[var(--bg-secondary)] overflow-hidden transition-all duration-200 shadow-2xs"
         >
           <button
             @click="toggleFaq(idx)"

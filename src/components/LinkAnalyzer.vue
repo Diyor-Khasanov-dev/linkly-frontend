@@ -62,16 +62,12 @@ const maxClickCount = computed(() => {
 const isAnalyzing = ref(false)
 
 const handleAnalyzeSearch = () => {
-  if (!searchQuery.value) return
-  isAnalyzing.value = true
-  setTimeout(() => {
-    isAnalyzing.value = false
-  }, 400)
+  window.location.href = '/register'
 }
 </script>
 
 <template>
-  <section class="py-16 sm:py-24 border-t border-[var(--border-color)] bg-[var(--bg-secondary)]/50 transition-colors duration-200" id="analyzer">
+  <section class="py-16 sm:py-24 border-t border-slate-200/80 dark:border-[var(--border-color)] bg-slate-50/70 dark:bg-[var(--bg-secondary)]/50 transition-colors duration-200" id="analyzer">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
 
       <!-- Section Header -->
@@ -91,17 +87,17 @@ const handleAnalyzeSearch = () => {
       <!-- Search Input for Analyzer -->
       <div class="max-w-xl mx-auto">
         <form @submit.prevent="handleAnalyzeSearch" class="relative flex items-center">
-          <Search class="w-4 h-4 absolute left-4 text-[var(--text-secondary)]" />
+          <Search class="w-4 h-4 absolute left-4 text-slate-400 dark:text-[var(--text-secondary)]" />
           <input
             v-model="searchQuery"
             type="text"
             placeholder="Enter any linkly.sh short URL to analyze..."
-            class="w-full pl-11 pr-28 py-3 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 transition shadow-sm"
+            class="w-full pl-11 pr-28 py-3 bg-white dark:bg-[var(--bg-primary)] border border-slate-200 dark:border-[var(--border-color)] rounded-xl text-sm text-slate-900 dark:text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-zinc-100 transition shadow-sm"
           />
           <button
             type="submit"
             :disabled="isAnalyzing"
-            class="absolute right-1.5 px-4 py-1.5 bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900 rounded-lg text-xs font-medium hover:opacity-90 transition cursor-pointer"
+            class="absolute right-1.5 px-4 py-1.5 bg-blue-600 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg text-xs font-semibold hover:bg-blue-700 dark:hover:bg-zinc-200 transition cursor-pointer shadow-xs"
           >
             <span>{{ isAnalyzing ? 'Analyzing...' : 'Analyze' }}</span>
           </button>
@@ -109,7 +105,7 @@ const handleAnalyzeSearch = () => {
       </div>
 
       <!-- Dashboard Grid Box -->
-      <div class="bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-2xl p-6 sm:p-8 shadow-xl shadow-black/5 dark:shadow-none space-y-8">
+      <div class="bg-white dark:bg-[var(--bg-primary)] border border-slate-200 dark:border-[var(--border-color)] rounded-2xl p-6 sm:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none space-y-8">
 
         <!-- Header Metrics & Time Filters -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[var(--border-color)] pb-6">
