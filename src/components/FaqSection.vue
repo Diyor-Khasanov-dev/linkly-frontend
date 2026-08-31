@@ -33,12 +33,12 @@ const toggleFaq = (index: number) => {
 </script>
 
 <template>
-  <section class="py-16 sm:py-24 border-t border-slate-200/80 dark:border-[var(--border-color)] bg-white dark:bg-[var(--bg-primary)] transition-colors duration-200" id="faq">
+  <section class="py-16 sm:py-24 border-t border-[var(--border-color)] bg-[var(--bg-primary)] transition-colors duration-200" id="faq">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
 
       <!-- Header -->
       <div class="text-center space-y-3">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-[var(--border-color)] text-[var(--text-primary)] text-xs font-semibold">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-800 border border-[var(--border-color)] text-[var(--text-primary)] text-xs font-semibold">
           <HelpCircle class="w-3.5 h-3.5 text-blue-500" />
           <span>Frequently Asked Questions</span>
         </div>
@@ -55,7 +55,7 @@ const toggleFaq = (index: number) => {
         <div
           v-for="(faq, idx) in faqs"
           :key="idx"
-          class="border border-slate-200 dark:border-[var(--border-color)] rounded-2xl bg-slate-50/70 dark:bg-[var(--bg-secondary)] overflow-hidden transition-all duration-200 shadow-2xs"
+          class="border border-[var(--border-color)] rounded-2xl bg-[var(--bg-secondary)] overflow-hidden transition-all duration-200 shadow-2xs"
         >
           <button
             @click="toggleFaq(idx)"

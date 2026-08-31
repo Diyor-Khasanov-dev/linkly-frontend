@@ -3,16 +3,16 @@ import { Link2, Github, ArrowUpRight } from 'lucide-vue-next'
 </script>
 
 <template>
-  <footer class="border-t border-slate-200 dark:border-[var(--border-color)] bg-slate-100/60 dark:bg-[var(--bg-secondary)] text-slate-600 dark:text-[var(--text-secondary)] py-12 transition-colors duration-200">
+  <footer class="border-t border-[var(--border-color)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] py-12 transition-colors duration-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 md:grid-cols-5 gap-8 pb-12 border-b border-[var(--border-color)]">
         <!-- Brand Info -->
         <div class="md:col-span-2 space-y-4">
           <a href="#" class="flex items-center gap-2.5 font-bold text-xl text-[var(--text-primary)]">
-            <div class="w-8 h-8 rounded-lg bg-zinc-900 dark:bg-zinc-100 flex items-center justify-center text-zinc-100 dark:text-zinc-900 shadow-sm">
+            <div class="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-900 shadow-sm">
               <Link2 class="w-5 h-5 stroke-[2.5]" />
             </div>
-            <span class="font-semibold text-lg">Linkly<span class="text-blue-600 dark:text-blue-500">.</span></span>
+            <span class="font-semibold text-lg">Linkly<span class="text-blue-500">.</span></span>
           </a>
           <p class="text-sm max-w-sm text-[var(--text-secondary)] leading-relaxed">
             Minimalist URL Shortener, Real-time Analytics, and Custom QR Code Generator. Built for speed, clarity, and precision.

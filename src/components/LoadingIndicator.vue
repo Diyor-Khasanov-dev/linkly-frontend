@@ -45,11 +45,11 @@ defineExpose({
     <Transition name="fade">
       <div
         v-if="isNavigating"
-        class="fixed inset-0 z-40 bg-zinc-950/20 dark:bg-zinc-950/40 backdrop-blur-[1px] flex items-center justify-center pointer-events-none"
+        class="fixed inset-0 z-40 bg-zinc-950/40 backdrop-blur-[1px] flex items-center justify-center pointer-events-none"
       >
-        <div class="p-4 rounded-2xl bg-white/90 dark:bg-zinc-900/90 border border-slate-200 dark:border-zinc-800 shadow-xl flex items-center gap-3">
-          <div class="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <span class="text-xs font-semibold text-slate-700 dark:text-zinc-300">Loading...</span>
+        <div class="p-4 rounded-2xl bg-zinc-900/90 border border-zinc-800 shadow-xl flex items-center gap-3">
+          <div class="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <span class="text-xs font-semibold text-zinc-300">Loading...</span>
         </div>
       </div>
     </Transition>
