@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ApiService } from '../../api.service';
 import { DemoDataService } from '../../demo-data.service';
 
 @Component({
@@ -12,11 +13,11 @@ import { DemoDataService } from '../../demo-data.service';
           <p class="dashboard-eyebrow">QR Code Studio</p>
           <h1>Generate & customize QR codes</h1>
           <p>
-            Create high-resolution QR codes with custom styling, colors, and target destinations.
-            Manage all active QR codes in your demo workspace.
+            Create high-resolution QR codes using the backend API directly or preview with custom styling.
+            Manage all active QR codes in your workspace.
           </p>
         </div>
-        <span class="dashboard-pill font-mono">Demo Workspace Ready</span>
+        <span class="dashboard-pill font-mono">GET /api/qr</span>
       </div>
 
       <div class="demo-page-grid">
@@ -25,7 +26,7 @@ import { DemoDataService } from '../../demo-data.service';
           <div>
             <div class="flex items-center justify-between">
               <span class="font-mono text-xs uppercase text-ink-faint">Generator</span>
-              <span class="font-mono text-[11px] text-accent font-bold">Vector SVG Output</span>
+              <span class="font-mono text-[11px] text-accent font-bold">Backend PNG / Vector SVG</span>
             </div>
 
             <label for="qr-title-input" class="mt-5 flex flex-col gap-2 font-bold text-ink">
@@ -91,78 +92,20 @@ import { DemoDataService } from '../../demo-data.service';
         <div class="demo-preview-card flex flex-col justify-between">
           <div class="dashboard-panel-header">
             <div>
-              <p class="dashboard-eyebrow">Live Visual Preview</p>
+              <p class="dashboard-eyebrow">Backend Live Preview</p>
               <h2 class="dashboard-panel-title">QR Code Result</h2>
             </div>
             <span class="dashboard-pill font-mono text-xs">{{ previewTitle() }}</span>
           </div>
 
           <div class="my-6 p-8 rounded-md2 border border-line flex flex-col items-center justify-center transition-colors" [style.background-color]="previewBgColor()">
-            <!-- SVG QR Code Visual Matrix -->
-            <div class="w-48 h-48 relative flex items-center justify-center p-3 rounded-md shadow-md border border-line/20" [style.background-color]="previewBgColor()">
-              <svg viewBox="0 0 100 100" class="w-full h-full" [style.fill]="previewFgColor()">
-                <!-- QR Corner Finder Top Left -->
-                <rect x="5" y="5" width="25" height="25" rx="3" />
-                <rect x="9" y="9" width="17" height="17" rx="2" [style.fill]="previewBgColor()" />
-                <rect x="13" y="13" width="9" height="9" rx="1" />
-
-                <!-- QR Corner Finder Top Right -->
-                <rect x="70" y="5" width="25" height="25" rx="3" />
-                <rect x="74" y="9" width="17" height="17" rx="2" [style.fill]="previewBgColor()" />
-                <rect x="78" y="13" width="9" height="9" rx="1" />
-
-                <!-- QR Corner Finder Bottom Left -->
-                <rect x="5" y="70" width="25" height="25" rx="3" />
-                <rect x="9" y="74" width="17" height="17" rx="2" [style.fill]="previewBgColor()" />
-                <rect x="13" y="78" width="9" height="9" rx="1" />
-
-                <!-- Data Modules Pattern Grid -->
-                <rect x="35" y="5" width="5" height="5" />
-                <rect x="45" y="5" width="5" height="5" />
-                <rect x="55" y="5" width="5" height="5" />
-                <rect x="35" y="15" width="5" height="5" />
-                <rect x="50" y="15" width="5" height="5" />
-                <rect x="60" y="15" width="5" height="5" />
-
-                <rect x="5" y="35" width="5" height="5" />
-                <rect x="15" y="35" width="5" height="5" />
-                <rect x="25" y="35" width="5" height="5" />
-                <rect x="35" y="35" width="10" height="5" />
-                <rect x="50" y="35" width="5" height="5" />
-                <rect x="60" y="35" width="10" height="5" />
-                <rect x="75" y="35" width="5" height="5" />
-                <rect x="85" y="35" width="10" height="5" />
-
-                <rect x="5" y="45" width="5" height="5" />
-                <rect x="20" y="45" width="5" height="5" />
-                <rect x="30" y="45" width="5" height="5" />
-                <rect x="45" y="45" width="10" height="5" />
-                <rect x="65" y="45" width="5" height="5" />
-                <rect x="80" y="45" width="5" height="5" />
-
-                <rect x="10" y="55" width="5" height="5" />
-                <rect x="25" y="55" width="5" height="5" />
-                <rect x="35" y="55" width="5" height="5" />
-                <rect x="55" y="55" width="10" height="5" />
-                <rect x="70" y="55" width="5" height="5" />
-                <rect x="85" y="55" width="5" height="5" />
-
-                <rect x="35" y="70" width="5" height="5" />
-                <rect x="45" y="70" width="10" height="5" />
-                <rect x="60" y="70" width="5" height="5" />
-                <rect x="75" y="70" width="5" height="5" />
-                <rect x="85" y="70" width="10" height="5" />
-
-                <rect x="40" y="80" width="5" height="5" />
-                <rect x="50" y="80" width="5" height="5" />
-                <rect x="65" y="80" width="10" height="5" />
-                <rect x="80" y="80" width="5" height="5" />
-
-                <rect x="35" y="90" width="10" height="5" />
-                <rect x="55" y="90" width="5" height="5" />
-                <rect x="70" y="90" width="5" height="5" />
-                <rect x="85" y="90" width="5" height="5" />
-              </svg>
+            <!-- Live Backend QR Code Image -->
+            <div class="w-48 h-48 relative flex items-center justify-center p-3 rounded-md shadow-md border border-line/20 bg-white">
+              <img
+                [src]="backendQrUrl()"
+                alt="Backend generated QR Code"
+                class="w-full h-full object-contain"
+              />
             </div>
 
             <p class="mt-4 font-mono text-xs truncate max-w-full text-center text-ink-soft">
@@ -178,13 +121,14 @@ import { DemoDataService } from '../../demo-data.service';
             >
               {{ copied() ? '✓ Target URL Copied' : 'Copy Target URL' }}
             </button>
-            <button
-              type="button"
-              (click)="downloadSimulated()"
-              class="dashboard-primary-button flex-1"
+            <a
+              [href]="backendQrUrl()"
+              target="_blank"
+              download="qrcode.png"
+              class="dashboard-primary-button flex-1 text-center"
             >
-              Download SVG / PNG
-            </button>
+              Download PNG
+            </a>
           </div>
         </div>
       </div>
@@ -224,6 +168,7 @@ import { DemoDataService } from '../../demo-data.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class QrCode {
+  readonly apiService = inject(ApiService);
   readonly demoService = inject(DemoDataService);
   private readonly formBuilder = inject(NonNullableFormBuilder);
 
@@ -240,6 +185,10 @@ export class QrCode {
   readonly previewTargetUrl = signal('https://linkly.com/promo/spring-2025');
   readonly previewFgColor = signal('#1d1f26');
   readonly previewBgColor = signal('#ffffff');
+
+  readonly backendQrUrl = computed(() => {
+    return this.apiService.getQrCodeUrl(this.previewTargetUrl());
+  });
 
   applyPreset(fg: string, bg: string): void {
     this.form.patchValue({ fgColor: fg, bgColor: bg });
@@ -268,14 +217,4 @@ export class QrCode {
     }
   }
 
-  downloadSimulated(): void {
-    const svgData = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="${this.previewBgColor()}"/><path fill="${this.previewFgColor()}" d="M5 5h25v25H5zm4 4v17h17V9zm4 4h9v9h-9zm52-8h25v25H70zm4 4v17h17V9zm4 4h9v9h-9zM5 70h25v25H5zm4 4v17h17V74zm4 4h9v9h-9z"/></svg>`;
-    const blob = new Blob([svgData], { type: 'image/svg+xml' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${this.previewTitle().toLowerCase().replace(/[^a-z0-9]/g, '-')}-qrcode.svg`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
 }

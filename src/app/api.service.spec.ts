@@ -25,6 +25,18 @@ describe('ApiService Unit Tests', () => {
     expect(apiService.formatShortUrl({ shortCode: 'custom123' })).toBe(`${LINKLY_API_BASE_URL}/custom123`);
   });
 
+  it('generates QR code URL correctly', () => {
+    expect(apiService.getQrCodeUrl('https://example.com/test')).toBe(
+      `${LINKLY_API_BASE_URL}/api/qr?url=${encodeURIComponent('https://example.com/test')}`,
+    );
+  });
+
+  it('generates short link QR code URL correctly', () => {
+    expect(apiService.getShortLinkQrCodeUrl('my-code')).toBe(
+      `${LINKLY_API_BASE_URL}/api/links/my-code/qrcode`,
+    );
+  });
+
   it('formats error messages correctly', () => {
     expect(apiService.extractErrorMessage(new Error('Generic error'))).toBe('Request failed. Please try again.');
   });
