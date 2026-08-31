@@ -13,7 +13,6 @@ import {
   LogOut,
   Menu,
   X,
-  Sparkles,
   ChevronRight
 } from 'lucide-vue-next'
 
