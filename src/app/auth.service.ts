@@ -1,5 +1,6 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, firstValueFrom } from 'rxjs';
 
 import { ApiService, AuthResponse, LinklyUser, LoginPayload, RegisterPayload } from './api.service';
@@ -112,10 +113,15 @@ export class AuthService {
 
     try {
       const user = await firstValueFrom(this.api.getMe(token));
-      this.setUser(user);
+      if (user) {
+        this.setUser(user);
+      }
       return user;
-    } catch {
-      // If backend error on refresh while session exists, preserve user or fallback to demo
+    } catch (error) {
+      if (error instanceof HttpErrorResponse && error.status === 401) {
+        this.clearSession();
+        return null;
+      }
       if (this.getCurrentUser()) {
         return this.getCurrentUser();
       }
@@ -149,7 +155,9 @@ export class AuthService {
       }
     }
 
-    this.setUser(user);
+    if (user) {
+      this.setUser(user);
+    }
   }
 
   private setUser(user: LinklyUser | null): void {
