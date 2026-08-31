@@ -1,13 +1,22 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 
-// Views
+// Main Views
 import HomeView from '../views/HomeView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import OtpVerificationView from '../views/OtpVerificationView.vue'
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
+
+// Dashboard Sub-Views
+import UrlShortenerView from '../views/dashboard/UrlShortenerView.vue'
+import UrlSaverView from '../views/dashboard/UrlSaverView.vue'
+import QrGeneratorView from '../views/dashboard/QrGeneratorView.vue'
+import ExpiringUrlView from '../views/dashboard/ExpiringUrlView.vue'
+import ExpiringQrView from '../views/dashboard/ExpiringQrView.vue'
+import AnalyticsView from '../views/dashboard/AnalyticsView.vue'
+import ProfileView from '../views/dashboard/ProfileView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -32,9 +41,49 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/dashboard',
-    name: 'Dashboard',
     component: DashboardView,
     meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        redirect: '/dashboard/shortener',
+      },
+      {
+        path: 'shortener',
+        name: 'DashboardUrlShortener',
+        component: UrlShortenerView,
+      },
+      {
+        path: 'saver',
+        name: 'DashboardUrlSaver',
+        component: UrlSaverView,
+      },
+      {
+        path: 'qr-generator',
+        name: 'DashboardQrGenerator',
+        component: QrGeneratorView,
+      },
+      {
+        path: 'expiring-url',
+        name: 'DashboardExpiringUrl',
+        component: ExpiringUrlView,
+      },
+      {
+        path: 'expiring-qr',
+        name: 'DashboardExpiringQr',
+        component: ExpiringQrView,
+      },
+      {
+        path: 'analytics',
+        name: 'DashboardAnalytics',
+        component: AnalyticsView,
+      },
+      {
+        path: 'profile',
+        name: 'DashboardProfile',
+        component: ProfileView,
+      },
+    ],
   },
   {
     path: '/:pathMatch(.*)*',
