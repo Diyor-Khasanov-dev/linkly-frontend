@@ -4,7 +4,6 @@ import { useAuth } from '../composables/useAuth'
 // Main Views
 import HomeView from '../views/HomeView.vue'
 import RegisterView from '../views/RegisterView.vue'
-import OtpVerificationView from '../views/OtpVerificationView.vue'
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
@@ -28,11 +27,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/register',
     name: 'Register',
     component: RegisterView,
-  },
-  {
-    path: '/otp-verification',
-    name: 'OtpVerification',
-    component: OtpVerificationView,
   },
   {
     path: '/login',
