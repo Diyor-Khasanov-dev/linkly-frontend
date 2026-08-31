@@ -23,7 +23,7 @@ router.afterEach(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased font-sans flex flex-col selection:bg-zinc-900 selection:text-white dark:selection:bg-white dark:selection:text-zinc-900">
+  <div class="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased font-sans flex flex-col selection:bg-white selection:text-zinc-900">
     <LoadingIndicator ref="loadingRef" />
     <Navbar />
     <main class="flex-1">

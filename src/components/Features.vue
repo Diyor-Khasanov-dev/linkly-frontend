@@ -44,12 +44,12 @@ const featuresList = [
 </script>
 
 <template>
-  <section class="py-16 sm:py-24 border-t border-slate-200/80 dark:border-[var(--border-color)] bg-slate-50/50 dark:bg-[var(--bg-primary)] transition-colors duration-200" id="features">
+  <section class="py-16 sm:py-24 border-t border-[var(--border-color)] bg-[var(--bg-primary)] transition-colors duration-200" id="features">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
 
       <!-- Header -->
       <div class="text-center max-w-2xl mx-auto space-y-3">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-zinc-800 border border-blue-200 dark:border-[var(--border-color)] text-blue-700 dark:text-[var(--text-primary)] text-xs font-semibold">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-800 border border-[var(--border-color)] text-[var(--text-primary)] text-xs font-semibold">
           <Sparkles class="w-3.5 h-3.5 text-blue-500" />
           <span>Engineered for Perfection</span>
         </div>
@@ -66,16 +66,16 @@ const featuresList = [
         <div
           v-for="(feature, idx) in featuresList"
           :key="idx"
-          class="p-6 rounded-2xl bg-white dark:bg-[var(--bg-secondary)] border border-slate-200/90 dark:border-[var(--border-color)] hover:border-blue-300 dark:hover:border-zinc-600 hover:shadow-lg hover:shadow-blue-500/5 transition-all duration-200 space-y-4 group"
+          class="p-6 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-color)] hover:border-zinc-600 hover:shadow-lg hover:shadow-blue-500/5 transition-all duration-200 space-y-4 group"
         >
-          <div class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-[var(--bg-primary)] border border-slate-200 dark:border-[var(--border-color)] flex items-center justify-center text-blue-600 dark:text-[var(--text-primary)] group-hover:scale-105 transition-transform shadow-xs">
-            <component :is="feature.icon" class="w-5 h-5" />
+          <div class="w-10 h-10 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-color)] flex items-center justify-center text-[var(--text-primary)] group-hover:scale-105 transition-transform shadow-xs">
+            <component :is="feature.icon" class="w-5 h-5 text-blue-500" />
           </div>
           <div class="space-y-1.5">
-            <h3 class="text-base font-semibold text-slate-900 dark:text-[var(--text-primary)]">
+            <h3 class="text-base font-semibold text-[var(--text-primary)]">
               {{ feature.title }}
             </h3>
-            <p class="text-xs sm:text-sm text-slate-600 dark:text-[var(--text-secondary)] leading-relaxed">
+            <p class="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed">
               {{ feature.description }}
             </p>
           </div>
