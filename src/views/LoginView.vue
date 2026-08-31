@@ -24,7 +24,7 @@ const handleLogin = async () => {
     const redirectPath = (route.query.redirect as string) || '/dashboard'
     router.push(redirectPath)
   } else {
-    errorMessage.value = 'Invalid email or password'
+    errorMessage.value = res.error || 'Invalid email or password'
   }
 }
 </script>
@@ -74,7 +74,6 @@ const handleLogin = async () => {
         <div class="space-y-1">
           <div class="flex items-center justify-between">
             <label class="block text-xs font-semibold text-zinc-300">Password</label>
-            <a href="#" class="text-xs text-blue-400 hover:underline">Forgot password?</a>
           </div>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500">
