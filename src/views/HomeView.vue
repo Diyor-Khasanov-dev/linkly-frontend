@@ -4,6 +4,9 @@ import LinkAnalyzer from '../components/LinkAnalyzer.vue'
 import Features from '../components/Features.vue'
 import FaqSection from '../components/FaqSection.vue'
 import { Sparkles, ArrowRight } from 'lucide-vue-next'
+import { useAuth } from '../composables/useAuth'
+
+const { isAuthenticated } = useAuth()
 </script>
 
 <template>
@@ -82,7 +85,7 @@ import { Sparkles, ArrowRight } from 'lucide-vue-next'
         </p>
         <div class="flex items-center justify-center gap-4 pt-2">
           <router-link
-            to="/register"
+            :to="isAuthenticated ? '/dashboard' : '/register'"
             class="px-6 py-3 rounded-xl bg-zinc-100 text-zinc-900 font-semibold text-sm hover:opacity-90 transition shadow-md flex items-center gap-2"
           >
             <span>Get Started Now</span>

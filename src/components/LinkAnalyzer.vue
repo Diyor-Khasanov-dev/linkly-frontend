@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import {
   BarChart3,
   Globe,
@@ -12,6 +13,10 @@ import {
   ArrowUpRight,
   Sparkles
 } from 'lucide-vue-next'
+import { useAuth } from '../composables/useAuth'
+
+const router = useRouter()
+const { isAuthenticated } = useAuth()
 
 const searchQuery = ref('linkly.sh/v3-5-release')
 const activeTimeRange = ref<'7d' | '30d' | '90d'>('7d')
@@ -62,7 +67,11 @@ const maxClickCount = computed(() => {
 const isAnalyzing = ref(false)
 
 const handleAnalyzeSearch = () => {
-  window.location.href = '/register'
+  if (isAuthenticated.value) {
+    router.push('/dashboard')
+  } else {
+    router.push('/register')
+  }
 }
 </script>
 
