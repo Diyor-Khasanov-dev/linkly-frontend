@@ -29,7 +29,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <header class="sticky top-0 z-50 backdrop-blur-md bg-[var(--bg-primary)]/80 border-b border-[var(--border-color)] transition-colors duration-200">
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-[var(--bg-primary)]/80 border-b border-slate-200/80 dark:border-[var(--border-color)] transition-colors duration-200 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <!-- Logo -->
       <a href="#" class="flex items-center gap-2.5 font-bold text-xl tracking-tight text-[var(--text-primary)] hover:opacity-90 transition">
@@ -45,7 +45,6 @@ onMounted(() => {
         <a href="#analyzer" class="hover:text-[var(--text-primary)] transition-colors">Analyzer</a>
         <a href="#qr-generator" class="hover:text-[var(--text-primary)] transition-colors">QR Code</a>
         <a href="#features" class="hover:text-[var(--text-primary)] transition-colors">Features</a>
-        <a href="#pricing" class="hover:text-[var(--text-primary)] transition-colors">Pricing</a>
         <a href="#faq" class="hover:text-[var(--text-primary)] transition-colors">FAQ</a>
       </nav>
 
@@ -61,7 +60,7 @@ onMounted(() => {
         </button>
 
         <a
-          href="#shortener"
+          href="/register"
           class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all shadow-sm"
         >
           <span>Get Started</span>
@@ -94,11 +93,10 @@ onMounted(() => {
       <a @click="mobileMenuOpen = false" href="#analyzer" class="block py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]">Analyzer</a>
       <a @click="mobileMenuOpen = false" href="#qr-generator" class="block py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]">QR Code</a>
       <a @click="mobileMenuOpen = false" href="#features" class="block py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]">Features</a>
-      <a @click="mobileMenuOpen = false" href="#pricing" class="block py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]">Pricing</a>
       <a @click="mobileMenuOpen = false" href="#faq" class="block py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]">FAQ</a>
       <a
         @click="mobileMenuOpen = false"
-        href="#shortener"
+        href="/register"
         class="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900"
       >
         <span>Get Started</span>
