@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link2, Github, Twitter, ArrowUpRight } from 'lucide-vue-next'
+import { Link2, Github, ArrowUpRight } from 'lucide-vue-next'
 </script>
 
 <template>
