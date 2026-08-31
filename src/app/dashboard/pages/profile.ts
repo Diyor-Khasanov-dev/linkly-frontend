@@ -52,9 +52,9 @@ import { AuthService } from '../../auth.service';
               Account ID
               <input id="prof-id" type="text" [value]="user?.id || user?._id || ''" readonly />
             </label>
-            <label for="prof-tz" class="profile-field">
-              Time zone
-              <input id="prof-tz" type="text" value="UTC" readonly />
+            <label for="prof-verified" class="profile-field">
+              Email verification status
+              <input id="prof-verified" type="text" [value]="user?.isEmailVerified || user?.isVerificated ? 'Verified' : 'Unverified'" readonly />
             </label>
           </div>
 
