@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
-import { ShieldCheck, ArrowRight, RefreshCw, CheckCircle2 } from 'lucide-vue-next'
+import { ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-vue-next'
 
 const router = useRouter()
 const route = useRoute()
@@ -12,10 +12,10 @@ const digits = ref(['', '', '', '', '', ''])
 const inputRefs = ref<(HTMLInputElement | null)[]>([])
 const targetEmail = ref('')
 const errorMessage = ref('')
-const resendSuccess = ref(false)
+const successMessage = ref('')
 
 onMounted(() => {
-  targetEmail.value = (route.query.email as string) || pendingEmail.value || 'user@linkly.com'
+  targetEmail.value = (route.query.email as string) || pendingEmail.value || ''
 })
 
 const handleInput = (index: number, event: Event) => {
@@ -24,15 +24,15 @@ const handleInput = (index: number, event: Event) => {
 
   if (value.length > 1) {
     // If pasted multi-character code
-    const chars = value.slice(0, 6).split('')
+    const chars = value.replace(/\D/g, '').slice(0, 6).split('')
     chars.forEach((char, i) => {
       if (i < 6) digits.value[i] = char
     })
     const lastIdx = Math.min(chars.length, 5)
     inputRefs.value[lastIdx]?.focus()
   } else {
-    digits.value[index] = value
-    if (value && index < 5) {
+    digits.value[index] = value.replace(/\D/g, '')
+    if (digits.value[index] && index < 5) {
       inputRefs.value[index + 1]?.focus()
     }
   }
@@ -46,25 +46,22 @@ const handleKeyDown = (index: number, event: KeyboardEvent) => {
 
 const handleVerify = async () => {
   errorMessage.value = ''
+  successMessage.value = ''
   const code = digits.value.join('')
-  if (code.length < 4) {
-    errorMessage.value = 'Please enter at least 4 digits'
+  if (code.length < 6) {
+    errorMessage.value = 'Please enter the full 6-digit OTP code'
     return
   }
 
-  const res = await verifyOtp(code)
+  const res = await verifyOtp(targetEmail.value, code)
   if (res.success) {
-    router.push('/dashboard')
+    successMessage.value = res.message || 'Email verified successfully! Redirecting to sign in...'
+    setTimeout(() => {
+      router.push('/login')
+    }, 1500)
   } else {
     errorMessage.value = res.error || 'Verification failed. Please try again.'
   }
-}
-
-const handleResend = () => {
-  resendSuccess.value = true
-  setTimeout(() => {
-    resendSuccess.value = false
-  }, 3000)
 }
 </script>
 
@@ -84,18 +81,18 @@ const handleResend = () => {
         </h2>
         <p class="text-xs text-zinc-400 max-w-xs mx-auto">
           We sent a 6-digit verification code to
-          <span class="font-semibold text-zinc-200">{{ targetEmail }}</span>
+          <span class="font-semibold text-zinc-200">{{ targetEmail || 'your email' }}</span>
         </p>
       </div>
 
-      <!-- Error / Resend alert -->
+      <!-- Error / Success alert -->
       <div v-if="errorMessage" class="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-xs font-medium text-red-400">
         {{ errorMessage }}
       </div>
 
-      <div v-if="resendSuccess" class="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400 flex items-center justify-center gap-1.5">
+      <div v-if="successMessage" class="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400 flex items-center justify-center gap-1.5">
         <CheckCircle2 class="w-4 h-4" />
-        <span>New code sent to your email! (Default: 123456)</span>
+        <span>{{ successMessage }}</span>
       </div>
 
       <!-- OTP Form -->
@@ -120,28 +117,15 @@ const handleResend = () => {
           :disabled="isLoading"
           class="w-full py-3 px-4 rounded-xl bg-zinc-100 text-zinc-900 font-semibold text-sm hover:opacity-90 transition shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
         >
-          <span v-if="!isLoading">Verify & Access Dashboard</span>
+          <span v-if="!isLoading">Verify Code</span>
           <span v-else>Verifying code...</span>
           <ArrowRight v-if="!isLoading" class="w-4 h-4" />
         </button>
       </form>
 
-      <!-- Resend trigger -->
-      <div class="pt-2 text-xs text-zinc-400 flex items-center justify-center gap-1">
-        <span>Didn't receive the code?</span>
-        <button
-          type="button"
-          @click="handleResend"
-          class="font-medium text-blue-400 hover:underline flex items-center gap-1 cursor-pointer"
-        >
-          <RefreshCw class="w-3 h-3" />
-          <span>Resend code</span>
-        </button>
-      </div>
-
       <!-- Back to login -->
-      <div class="text-center text-xs text-zinc-400">
-        Need to change email?
+      <div class="text-center text-xs text-zinc-400 pt-2">
+        Need to change email or re-send?
         <router-link to="/register" class="font-medium text-blue-400 hover:underline">
           Back to Register
         </router-link>
