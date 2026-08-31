@@ -68,9 +68,9 @@ const handleLogout = () => {
 </script>
 
 <template>
-  <div>
-    <!-- Mobile top bar header with trigger button -->
-    <div class="lg:hidden flex items-center justify-between px-4 py-3 bg-[var(--bg-primary)] border-b border-[var(--border-color)]">
+  <div class="contents lg:flex lg:h-full shrink-0">
+    <!-- Mobile top bar header with trigger button (unscrollable) -->
+    <div class="lg:hidden shrink-0 flex items-center justify-between px-4 py-3 bg-[var(--bg-primary)] border-b border-[var(--border-color)] z-30">
       <router-link to="/" class="flex items-center gap-2 font-bold text-lg text-[var(--text-primary)]">
         <div class="w-7 h-7 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-900 shadow-sm">
           <Link2 class="w-4 h-4 stroke-[2.5]" />
@@ -95,17 +95,17 @@ const handleLogout = () => {
       class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-40"
     ></div>
 
-    <!-- Sidebar Container -->
+    <!-- Sidebar Container (Unscrollable container with scrollable nav body) -->
     <aside
       :class="[
-        'fixed lg:sticky top-0 left-0 z-50 h-screen w-64 bg-[var(--bg-primary)] border-r border-[var(--border-color)] flex flex-col justify-between transition-transform duration-300 ease-in-out',
+        'fixed lg:static top-0 left-0 z-50 h-screen lg:h-full w-64 bg-[var(--bg-primary)] border-r border-[var(--border-color)] flex flex-col justify-between transition-transform duration-300 ease-in-out shrink-0',
         isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       ]"
     >
       <!-- Top Section: Logo & Nav items -->
       <div class="flex-1 flex flex-col min-h-0 overflow-y-auto">
         <!-- Logo Branding Header -->
-        <div class="p-5 flex items-center justify-between border-b border-[var(--border-color)]">
+        <div class="p-5 flex items-center justify-between border-b border-[var(--border-color)] shrink-0">
           <router-link to="/" class="flex items-center gap-2.5 font-bold text-xl tracking-tight text-[var(--text-primary)]">
             <div class="w-8 h-8 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-900 shadow-sm">
               <Link2 class="w-5 h-5 stroke-[2.5]" />
@@ -178,7 +178,7 @@ const handleLogout = () => {
         </nav>
 
         <!-- Pro Upgrade Box Banner -->
-        <div class="m-3 p-3.5 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-800/90 border border-zinc-800 text-xs space-y-2 mt-auto">
+        <div class="m-3 p-3.5 rounded-xl bg-gradient-to-br from-zinc-900 to-zinc-800/90 border border-zinc-800 text-xs space-y-2 mt-auto shrink-0">
           <div class="flex items-center gap-2 text-zinc-100 font-semibold">
             <Sparkles class="w-4 h-4 text-amber-400 fill-amber-400/20" />
             <span>Linkly Pro</span>
@@ -189,31 +189,29 @@ const handleLogout = () => {
         </div>
       </div>
 
-      <!-- Bottom User Profile Bar -->
-      <div class="p-3 border-t border-[var(--border-color)] bg-[var(--bg-primary)]">
-        <div class="flex items-center justify-between p-2 rounded-xl hover:bg-[var(--bg-secondary)] transition">
-          <div class="flex items-center gap-2.5 min-w-0">
-            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm">
-              {{ (currentUser?.name || currentUser?.email || 'User').charAt(0) }}
-            </div>
-            <div class="flex flex-col min-w-0">
-              <span class="text-xs font-semibold text-[var(--text-primary)] truncate">
-                {{ currentUser?.name || 'Account' }}
-              </span>
-              <span class="text-[11px] text-[var(--text-secondary)] truncate">
-                {{ currentUser?.email || 'user@linkly.com' }}
-              </span>
-            </div>
+      <!-- Bottom User Profile & Logout Bar -->
+      <div class="p-3 border-t border-[var(--border-color)] bg-[var(--bg-primary)] shrink-0 space-y-2">
+        <div class="flex items-center gap-2.5 px-2 py-1.5 min-w-0">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0">
+            {{ (currentUser?.name || currentUser?.email || 'User').charAt(0) }}
           </div>
-
-          <button
-            @click="handleLogout"
-            title="Log out"
-            class="p-1.5 rounded-lg text-zinc-400 hover:text-red-400 hover:bg-zinc-800 transition cursor-pointer"
-          >
-            <LogOut class="w-4 h-4" />
-          </button>
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs font-semibold text-[var(--text-primary)] truncate">
+              {{ currentUser?.name || 'Account' }}
+            </span>
+            <span class="text-[11px] text-[var(--text-secondary)] truncate">
+              {{ currentUser?.email || 'user@linkly.com' }}
+            </span>
+          </div>
         </div>
+
+        <button
+          @click="handleLogout"
+          class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition cursor-pointer"
+        >
+          <LogOut class="w-4 h-4" />
+          <span>Logout</span>
+        </button>
       </div>
     </aside>
   </div>
