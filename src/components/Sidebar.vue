@@ -83,25 +83,34 @@ const handleLogout = async () => {
 
       <button
         @click="isMobileOpen = !isMobileOpen"
-        class="p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition cursor-pointer"
+        class="p-2.5 rounded-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] active:scale-95 transition cursor-pointer"
         aria-label="Toggle Navigation Menu"
       >
-        <Menu v-if="!isMobileOpen" class="w-5 h-5" />
-        <X v-else class="w-5 h-5" />
+        <Menu v-if="!isMobileOpen" class="w-6 h-6" />
+        <X v-else class="w-6 h-6" />
       </button>
     </div>
 
     <!-- Mobile Drawer Overlay -->
-    <div
-      v-if="isMobileOpen"
-      @click="isMobileOpen = false"
-      class="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-40"
-    ></div>
+    <Transition
+      enter-active-class="transition duration-200 ease-out"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition duration-150 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div
+        v-if="isMobileOpen"
+        @click="isMobileOpen = false"
+        class="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-xs z-40"
+      ></div>
+    </Transition>
 
-    <!-- Sidebar Container (Unscrollable container with scrollable nav body) -->
+    <!-- Sidebar Container -->
     <aside
       :class="[
-        'fixed lg:static top-0 left-0 z-50 h-screen lg:h-full w-64 bg-[var(--bg-primary)] border-r border-[var(--border-color)] flex flex-col justify-between transition-transform duration-300 ease-in-out shrink-0',
+        'fixed lg:static top-0 left-0 z-50 h-[100dvh] lg:h-full w-72 sm:w-64 bg-[var(--bg-primary)] border-r border-[var(--border-color)] flex flex-col justify-between transition-transform duration-300 ease-in-out shrink-0 shadow-2xl lg:shadow-none',
         isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       ]"
     >

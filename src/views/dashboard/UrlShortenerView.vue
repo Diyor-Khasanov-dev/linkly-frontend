@@ -97,10 +97,10 @@ const deleteLink = (id: string) => {
     </div>
 
     <!-- Creation Card Form -->
-    <div class="p-5 sm:p-6 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-xs space-y-4">
+    <div class="p-4 sm:p-6 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-xs space-y-4">
       <form @submit.prevent="handleCreateShortUrl" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div class="md:col-span-2 relative">
+          <div class="md:col-span-2 relative min-w-0">
             <label class="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Destination URL</label>
             <div class="relative">
               <input
@@ -108,20 +108,20 @@ const deleteLink = (id: string) => {
                 type="url"
                 placeholder="https://your-long-website-link.com/page..."
                 required
-                class="w-full pl-3.5 pr-4 py-2.5 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-sm font-normal text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full pl-3.5 pr-4 py-2.5 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-xs sm:text-sm font-normal text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
 
-          <div>
+          <div class="min-w-0">
             <label class="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Custom Alias (Optional)</label>
-            <div class="flex items-center bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2.5">
-              <span class="text-xs text-zinc-500 font-mono">linkly.sh/</span>
+            <div class="flex items-center bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl px-3 py-2.5 min-w-0">
+              <span class="text-xs text-zinc-500 font-mono shrink-0">linkly.sh/</span>
               <input
                 v-model="customAlias"
                 type="text"
                 placeholder="alias"
-                class="w-full bg-transparent text-xs font-mono text-[var(--text-primary)] focus:outline-none ml-1"
+                class="w-full min-w-0 bg-transparent text-xs font-mono text-[var(--text-primary)] focus:outline-none ml-1"
               />
             </div>
           </div>
@@ -130,7 +130,7 @@ const deleteLink = (id: string) => {
         <div class="flex justify-end">
           <button
             type="submit"
-            class="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm"
+            class="w-full sm:w-auto px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
           >
             <Sparkles class="w-4 h-4 text-blue-600" />
             <span>Shorten Link</span>
@@ -160,19 +160,19 @@ const deleteLink = (id: string) => {
           <div
             v-for="item in history.filter(i => i.alias.includes(searchQuery) || i.originalUrl.includes(searchQuery))"
             :key="item.id"
-            class="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-[var(--bg-primary)]/50 transition"
+            class="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 hover:bg-[var(--bg-primary)]/50 transition"
           >
             <div class="space-y-1 min-w-0 flex-1">
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 flex-wrap min-w-0">
                 <a
                   :href="item.shortUrl"
                   target="_blank"
-                  class="text-sm font-semibold font-mono text-blue-400 hover:underline flex items-center gap-1"
+                  class="text-xs sm:text-sm font-semibold font-mono text-blue-400 hover:underline flex items-center gap-1 truncate max-w-full"
                 >
-                  <span>{{ item.shortUrl }}</span>
-                  <ArrowUpRight class="w-3.5 h-3.5" />
+                  <span class="truncate">{{ item.shortUrl }}</span>
+                  <ArrowUpRight class="w-3.5 h-3.5 shrink-0" />
                 </a>
-                <span class="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-mono">
+                <span class="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-mono shrink-0">
                   {{ item.createdAt }}
                 </span>
               </div>
@@ -182,29 +182,31 @@ const deleteLink = (id: string) => {
             </div>
 
             <!-- Stats & Controls -->
-            <div class="flex items-center gap-3">
-              <div class="flex items-center gap-1 text-xs text-zinc-400 bg-zinc-950/40 px-3 py-1.5 rounded-lg border border-zinc-800">
-                <BarChart2 class="w-3.5 h-3.5 text-emerald-400" />
+            <div class="flex flex-wrap items-center justify-between sm:justify-end gap-2 sm:gap-3">
+              <div class="flex items-center gap-1 text-xs text-zinc-400 bg-zinc-950/40 px-2.5 py-1.5 rounded-lg border border-zinc-800">
+                <BarChart2 class="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                 <span class="font-semibold text-zinc-200">{{ item.clicks }}</span>
                 <span>clicks</span>
               </div>
 
-              <button
-                @click="copyToClipboard(item.shortUrl, item.id)"
-                class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-100 text-xs font-medium flex items-center gap-1.5 transition cursor-pointer"
-              >
-                <Check v-if="copiedId === item.id" class="w-3.5 h-3.5 text-emerald-400" />
-                <Copy v-else class="w-3.5 h-3.5" />
-                <span>{{ copiedId === item.id ? 'Copied' : 'Copy' }}</span>
-              </button>
+              <div class="flex items-center gap-2">
+                <button
+                  @click="copyToClipboard(item.shortUrl, item.id)"
+                  class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-100 text-xs font-medium flex items-center gap-1.5 transition cursor-pointer"
+                >
+                  <Check v-if="copiedId === item.id" class="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <Copy v-else class="w-3.5 h-3.5 shrink-0" />
+                  <span>{{ copiedId === item.id ? 'Copied' : 'Copy' }}</span>
+                </button>
 
-              <button
-                @click="deleteLink(item.id)"
-                class="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-950/30 transition cursor-pointer"
-                title="Delete Link"
-              >
-                <Trash2 class="w-4 h-4" />
-              </button>
+                <button
+                  @click="deleteLink(item.id)"
+                  class="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-950/30 transition cursor-pointer"
+                  title="Delete Link"
+                >
+                  <Trash2 class="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
 

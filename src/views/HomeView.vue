@@ -25,7 +25,7 @@ const { isAuthenticated } = useAuth()
         </div>
 
         <!-- Main Hero Headline -->
-        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-50 leading-[1.1]">
+        <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-50 leading-[1.15] sm:leading-[1.1]">
           Shorten URLs.<br />
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-500">
             Analyze Clicks.
@@ -34,7 +34,7 @@ const { isAuthenticated } = useAuth()
         </h1>
 
         <!-- Value Subtitle -->
-        <p class="max-w-2xl mx-auto text-base sm:text-lg text-zinc-400 font-normal leading-relaxed">
+        <p class="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-zinc-400 font-normal leading-relaxed px-2">
           The minimalist link management platform built for modern creators, developers, and brands. Streamlined, privacy-first, and blazingly fast.
         </p>
 
@@ -44,22 +44,22 @@ const { isAuthenticated } = useAuth()
         </div>
 
         <!-- Social Proof / Stats Strip -->
-        <div class="pt-12 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto border-t border-zinc-800 text-left">
+        <div class="pt-8 sm:pt-12 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto border-t border-zinc-800 text-left">
           <div class="p-3 rounded-xl bg-zinc-800/40 border border-zinc-800 space-y-0.5 shadow-2xs">
-            <div class="text-2xl font-bold font-mono text-zinc-100">10M+</div>
-            <div class="text-xs text-zinc-400 font-medium">Links Shortened</div>
+            <div class="text-xl sm:text-2xl font-bold font-mono text-zinc-100">10M+</div>
+            <div class="text-[11px] sm:text-xs text-zinc-400 font-medium">Links Shortened</div>
           </div>
           <div class="p-3 rounded-xl bg-zinc-800/40 border border-zinc-800 space-y-0.5 shadow-2xs">
-            <div class="text-2xl font-bold font-mono text-zinc-100">99.99%</div>
-            <div class="text-xs text-zinc-400 font-medium">Uptime SLA</div>
+            <div class="text-xl sm:text-2xl font-bold font-mono text-zinc-100">99.99%</div>
+            <div class="text-[11px] sm:text-xs text-zinc-400 font-medium">Uptime SLA</div>
           </div>
           <div class="p-3 rounded-xl bg-zinc-800/40 border border-zinc-800 space-y-0.5 shadow-2xs">
-            <div class="text-2xl font-bold font-mono text-zinc-100">&lt;15ms</div>
-            <div class="text-xs text-zinc-400 font-medium">Global Latency</div>
+            <div class="text-xl sm:text-2xl font-bold font-mono text-zinc-100">&lt;15ms</div>
+            <div class="text-[11px] sm:text-xs text-zinc-400 font-medium">Global Latency</div>
           </div>
           <div class="p-3 rounded-xl bg-zinc-800/40 border border-zinc-800 space-y-0.5 shadow-2xs">
-            <div class="text-2xl font-bold font-mono text-zinc-100">150k+</div>
-            <div class="text-xs text-zinc-400 font-medium">Active Analytics</div>
+            <div class="text-xl sm:text-2xl font-bold font-mono text-zinc-100">150k+</div>
+            <div class="text-[11px] sm:text-xs text-zinc-400 font-medium">Active Analytics</div>
           </div>
         </div>
       </div>

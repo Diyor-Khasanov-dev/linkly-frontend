@@ -26,7 +26,7 @@ router.afterEach(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased font-sans flex flex-col selection:bg-white selection:text-zinc-900">
+  <div class="min-h-[100dvh] bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased font-sans flex flex-col selection:bg-white selection:text-zinc-900 overflow-x-hidden">
     <LoadingIndicator ref="loadingRef" />
     <Navbar v-if="!isDashboard" />
     <main class="flex-1 flex flex-col min-h-0 min-w-0">

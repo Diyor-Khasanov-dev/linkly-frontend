@@ -98,43 +98,43 @@ const copyToClipboard = () => {
     <div class="bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-2xl p-4 sm:p-6 lg:p-8 shadow-none transition-all duration-300">
 
       <!-- Mode Tabs (Shortener vs QR Generator) -->
-      <div class="flex items-center justify-between border-b border-[var(--border-color)] pb-4 mb-6">
-        <div class="flex items-center gap-2 bg-[var(--bg-secondary)] p-1 rounded-xl">
+      <div class="flex flex-col xs:flex-row items-stretch xs:items-center justify-between gap-3 border-b border-[var(--border-color)] pb-4 mb-6">
+        <div class="flex items-center gap-1 sm:gap-2 bg-[var(--bg-secondary)] p-1 rounded-xl w-full xs:w-auto justify-center">
           <button
             @click="selectedTab = 'shorten'"
             :class="[
-              'flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer',
+              'flex-1 xs:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer whitespace-nowrap',
               selectedTab === 'shorten'
                 ? 'bg-[var(--bg-primary)] text-[var(--text-primary)] shadow-sm'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             ]"
           >
-            <Link2 class="w-4 h-4" />
+            <Link2 class="w-4 h-4 shrink-0" />
             <span>URL Shortener</span>
           </button>
 
           <button
             @click="selectedTab = 'qr'"
             :class="[
-              'flex items-center gap-2 px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer',
+              'flex-1 xs:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all cursor-pointer whitespace-nowrap',
               selectedTab === 'qr'
                 ? 'bg-[var(--bg-primary)] text-[var(--text-primary)] shadow-sm'
                 : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
             ]"
             id="qr-generator"
           >
-            <QrCode class="w-4 h-4" />
+            <QrCode class="w-4 h-4 shrink-0" />
             <span>QR Studio</span>
           </button>
         </div>
 
         <!-- Badges -->
-        <div class="hidden sm:flex items-center gap-4 text-xs text-[var(--text-secondary)] font-medium">
+        <div class="flex items-center justify-center gap-4 text-[11px] sm:text-xs text-[var(--text-secondary)] font-medium">
           <span class="flex items-center gap-1">
-            <Zap class="w-3.5 h-3.5 text-amber-500" /> Fast Redirect
+            <Zap class="w-3.5 h-3.5 text-amber-500 shrink-0" /> Fast Redirect
           </span>
           <span class="flex items-center gap-1">
-            <ShieldCheck class="w-3.5 h-3.5 text-emerald-500" /> Encrypted
+            <ShieldCheck class="w-3.5 h-3.5 text-emerald-500 shrink-0" /> Encrypted
           </span>
         </div>
       </div>
@@ -169,21 +169,21 @@ const copyToClipboard = () => {
           </div>
 
           <!-- Advanced Custom Alias Option -->
-          <div class="pt-2 flex flex-wrap items-center justify-between gap-4 text-xs text-[var(--text-secondary)]">
-            <div class="flex items-center gap-2 w-full sm:w-auto">
-              <span class="whitespace-nowrap font-medium text-[var(--text-primary)]">Custom Alias:</span>
-              <div class="flex items-center bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-2.5 py-1.5">
-                <span class="text-zinc-500 select-none">linkly.sh/</span>
+          <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs text-[var(--text-secondary)]">
+            <div class="flex items-center gap-2 w-full sm:w-auto min-w-0">
+              <span class="whitespace-nowrap font-medium text-[var(--text-primary)] shrink-0">Custom Alias:</span>
+              <div class="flex items-center bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-2.5 py-1.5 flex-1 sm:flex-initial min-w-0">
+                <span class="text-zinc-500 select-none font-mono text-xs shrink-0">linkly.sh/</span>
                 <input
                   v-model="customAlias"
                   type="text"
                   placeholder="my-custom-name"
-                  class="bg-transparent border-none text-[var(--text-primary)] focus:outline-none w-32 text-xs font-mono"
+                  class="bg-transparent border-none text-[var(--text-primary)] focus:outline-none min-w-0 flex-1 w-full sm:w-36 text-xs font-mono"
                 />
               </div>
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-center justify-end gap-4">
               <label class="flex items-center gap-2 cursor-pointer select-none">
                 <input type="checkbox" v-model="autoCopy" class="rounded border-zinc-700 bg-zinc-800 text-blue-500 focus:ring-blue-500" />
                 <span>Auto-copy result</span>

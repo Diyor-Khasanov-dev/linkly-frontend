@@ -151,7 +151,7 @@ const handleAnalyzeSearch = () => {
         </div>
 
         <!-- 4 Metric Cards -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div class="p-4 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] space-y-1">
             <div class="flex items-center justify-between text-xs text-[var(--text-secondary)]">
               <span>Total Clicks</span>
@@ -214,8 +214,8 @@ const handleAnalyzeSearch = () => {
             <span class="text-[var(--text-secondary)] font-normal">Updated 2m ago</span>
           </div>
 
-          <div class="p-6 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)]">
-            <div class="h-44 flex items-end justify-between gap-2 sm:gap-4 pt-4">
+          <div class="p-4 sm:p-6 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-color)] overflow-x-auto">
+            <div class="h-44 min-w-[300px] flex items-end justify-between gap-2 sm:gap-4 pt-4">
               <div
                 v-for="item in mockAnalytics.clicksByDay"
                 :key="item.day"
@@ -237,7 +237,7 @@ const handleAnalyzeSearch = () => {
         </div>
 
         <!-- Breakdown Grid (Geography, Devices, Referrers) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 pt-2">
 
           <!-- Top Geographic Locations -->
           <div class="p-5 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)]/60 space-y-4">
