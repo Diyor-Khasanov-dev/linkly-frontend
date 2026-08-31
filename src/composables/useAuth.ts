@@ -41,7 +41,6 @@ const getInitialUser = (): User | null => {
 
 const accessToken = ref<string>(getInitialToken())
 const currentUser = ref<User | null>(getInitialUser())
-const pendingEmail = ref<string>('')
 const isLoading = ref<boolean>(false)
 
 export function useAuth() {
@@ -94,56 +93,15 @@ export function useAuth() {
         }
       }
 
-      pendingEmail.value = email.trim().toLowerCase()
       return {
         success: true,
-        message: data.message || 'Registration successful. OTP sent to your email.',
+        message: data.message || 'Registration successful.',
         user: data.user,
       }
     } catch (err: any) {
       return {
         success: false,
         error: err.message || 'Network error occurred during registration.',
-      }
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  // POST /api/auth/otp-verification
-  const verifyOtp = async (email: string, code: string): Promise<AuthResponse> => {
-    isLoading.value = true
-    try {
-      const targetEmail = (email || pendingEmail.value).trim().toLowerCase()
-      const response = await fetch(`${API_BASE_URL}/api/auth/otp-verification`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: targetEmail,
-          code: code.trim(),
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        return {
-          success: false,
-          error: data.message || 'Invalid or expired OTP code.',
-        }
-      }
-
-      pendingEmail.value = ''
-      return {
-        success: true,
-        message: data.message || 'Email verified successfully.',
-      }
-    } catch (err: any) {
-      return {
-        success: false,
-        error: err.message || 'Network error during verification.',
       }
     } finally {
       isLoading.value = false
@@ -267,11 +225,9 @@ export function useAuth() {
   return {
     accessToken,
     currentUser,
-    pendingEmail,
     isAuthenticated,
     isLoading,
     register,
-    verifyOtp,
     login,
     fetchUser,
     logout,

@@ -27,7 +27,7 @@ const handleRegister = async () => {
 
   const res = await register(workspaceName.value || 'My Workspace', email.value, password.value)
   if (res.success) {
-    router.push({ path: '/otp-verification', query: { email: email.value } })
+    router.push({ path: '/login', query: { email: email.value } })
   } else {
     errorMessage.value = res.error || 'Registration failed. Please try again.'
   }
@@ -125,7 +125,7 @@ const handleRegister = async () => {
           :disabled="isLoading"
           class="w-full py-3 px-4 rounded-xl bg-zinc-100 text-zinc-900 font-semibold text-sm hover:opacity-90 transition shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
         >
-          <span v-if="!isLoading">Continue to OTP Verification</span>
+          <span v-if="!isLoading">Create Account</span>
           <span v-else>Creating account...</span>
           <ArrowRight v-if="!isLoading" class="w-4 h-4" />
         </button>
@@ -136,10 +136,6 @@ const handleRegister = async () => {
         <div class="flex items-center gap-2 text-xs text-zinc-400">
           <CheckCircle2 class="w-3.5 h-3.5 text-blue-500" />
           <span>No credit card required for free tier</span>
-        </div>
-        <div class="flex items-center gap-2 text-xs text-zinc-400">
-          <CheckCircle2 class="w-3.5 h-3.5 text-blue-500" />
-          <span>Instant OTP email code confirmation</span>
         </div>
       </div>
 
