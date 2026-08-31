@@ -26,12 +26,10 @@ export class Register {
 
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal('');
-  readonly noticeMessage = signal('');
   readonly form = this.formBuilder.group({
     workspaceName: ['', [Validators.required, trimmedLengthValidator(2, 80)]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, trimmedLengthValidator(8)]],
-    otp: ['', [trimmedLengthValidator(6, 6)]],
   });
 
   fillDemoCredentials(): void {
@@ -71,7 +69,6 @@ export class Register {
 
     this.isSubmitting.set(true);
     this.errorMessage.set('');
-    this.noticeMessage.set('');
 
     try {
       await this.authService.register(payload);
@@ -84,32 +81,6 @@ export class Register {
       await this.router.navigate(['/otp-verification'], {
         queryParams: { email: payload.email },
       });
-    } catch (error) {
-      this.errorMessage.set(this.api.extractErrorMessage(error));
-    } finally {
-      this.isSubmitting.set(false);
-    }
-  }
-
-  async verifyOtp(): Promise<void> {
-    const { email: rawEmail, otp: rawOtp } = this.form.getRawValue();
-    const email = normalizeEmail(rawEmail);
-    const otp = trimValue(rawOtp);
-
-    this.form.patchValue({ email, otp }, { emitEvent: false });
-
-    if (!email || !otp || this.form.controls.email.invalid || this.isSubmitting()) {
-      this.form.controls.email.markAsTouched();
-      this.form.controls.otp.markAsTouched();
-      return;
-    }
-
-    this.isSubmitting.set(true);
-    this.errorMessage.set('');
-
-    try {
-      await this.authService.verifyOtp(email, otp);
-      await this.router.navigate(['/dashboard']);
     } catch (error) {
       this.errorMessage.set(this.api.extractErrorMessage(error));
     } finally {
