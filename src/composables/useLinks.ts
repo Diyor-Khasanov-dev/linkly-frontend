@@ -11,9 +11,18 @@ export interface ShortLink {
   userId?: string
   isEssential?: boolean
   clicks: number
+  expiresAt?: string | null
+  maxClicks?: number | null
+  isExpired?: boolean
   lastAccessedAt?: string | null
   createdAt: string
   updatedAt: string
+}
+
+export interface CreateLinkOptions {
+  customAlias?: string
+  expiresAt?: string
+  maxClicks?: number
 }
 
 export interface CreateLinkResponse {
@@ -42,7 +51,7 @@ export function useLinks() {
 
   const createShortLink = async (
     url: string,
-    customAlias?: string
+    options?: string | CreateLinkOptions
   ): Promise<CreateLinkResponse> => {
     isLoading.value = true
     try {
@@ -53,9 +62,22 @@ export function useLinks() {
         headers['Authorization'] = `Bearer ${accessToken.value}`
       }
 
-      const bodyPayload: Record<string, string> = { url: url.trim() }
-      if (customAlias && customAlias.trim()) {
-        bodyPayload.customAlias = customAlias.trim()
+      let opts: CreateLinkOptions = {}
+      if (typeof options === 'string') {
+        opts = { customAlias: options }
+      } else if (options) {
+        opts = options
+      }
+
+      const bodyPayload: Record<string, any> = { url: url.trim() }
+      if (opts.customAlias && opts.customAlias.trim()) {
+        bodyPayload.customAlias = opts.customAlias.trim()
+      }
+      if (opts.expiresAt && opts.expiresAt.trim()) {
+        bodyPayload.expiresAt = opts.expiresAt.trim()
+      }
+      if (opts.maxClicks !== undefined && opts.maxClicks !== null && opts.maxClicks > 0) {
+        bodyPayload.maxClicks = Number(opts.maxClicks)
       }
 
       const response = await fetch(`${API_BASE_URL}/api/links`, {

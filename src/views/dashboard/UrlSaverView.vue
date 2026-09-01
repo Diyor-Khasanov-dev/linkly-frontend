@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
   Bookmark,
   Plus,
@@ -7,17 +7,26 @@ import {
   Tag,
   ExternalLink,
   Trash2,
-  Globe
+  Globe,
+  Loader2,
+  AlertCircle
 } from 'lucide-vue-next'
+import { useLinks } from '../../composables/useLinks'
 
 interface SavedBookmark {
   id: string
+  shortCode?: string
   title: string
   url: string
+  shortUrl?: string
   category: string
   notes: string
   savedAt: string
 }
+
+const STORAGE_KEY = 'linkly_saved_bookmarks_meta'
+
+const { createShortLink, deleteShortLink, fetchUserLinks, linksList, isLoading: isApiLoading } = useLinks()
 
 const newTitle = ref('')
 const newUrl = ref('')
@@ -25,54 +34,105 @@ const newCategory = ref('Work')
 const newNotes = ref('')
 const selectedCategoryFilter = ref('All')
 const searchQuery = ref('')
+const errorMsg = ref('')
+const isFetching = ref(false)
 
 const categories = ['Work', 'Research', 'Tools', 'Personal']
+const savedLinks = ref<SavedBookmark[]>([])
 
-const savedLinks = ref<SavedBookmark[]>([
-  {
-    id: '1',
-    title: 'Vue 3 Documentation & Guides',
-    url: 'https://vuejs.org',
-    category: 'Work',
-    notes: 'Reference for Composition API and Reactivity system',
-    savedAt: '2025-02-28'
-  },
-  {
-    id: '2',
-    title: 'Tailwind CSS UI Components',
-    url: 'https://tailwindcss.com',
-    category: 'Tools',
-    notes: 'Modern utility-first CSS framework for rapid UI development',
-    savedAt: '2025-02-26'
-  },
-  {
-    id: '3',
-    title: 'Web Security Guidelines & Best Practices',
-    url: 'https://owasp.org',
-    category: 'Research',
-    notes: 'Top 10 vulnerability lists and security check lists',
-    savedAt: '2025-02-20'
+const getStoredMeta = (): Record<string, { title?: string; category?: string; notes?: string }> => {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY)
+    return data ? JSON.parse(data) : {}
+  } catch {
+    return {}
   }
-])
-
-const handleAddBookmark = () => {
-  if (!newTitle.value.trim() || !newUrl.value.trim()) return
-
-  savedLinks.value.unshift({
-    id: Date.now().toString(),
-    title: newTitle.value.trim(),
-    url: newUrl.value.trim(),
-    category: newCategory.value,
-    notes: newNotes.value.trim(),
-    savedAt: new Date().toISOString().split('T')[0]
-  })
-
-  newTitle.value = ''
-  newUrl.value = ''
-  newNotes.value = ''
 }
 
-const deleteBookmark = (id: string) => {
+const saveStoredMeta = (metaMap: Record<string, { title?: string; category?: string; notes?: string }>) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(metaMap))
+  } catch (e) {
+    console.error('Failed to save metadata to localStorage', e)
+  }
+}
+
+const syncSavedBookmarks = async () => {
+  isFetching.value = true
+  await fetchUserLinks()
+  const metaMap = getStoredMeta()
+
+  const combined: SavedBookmark[] = linksList.value.map(link => {
+    const meta = metaMap[link.id] || metaMap[link.shortCode] || {}
+    return {
+      id: link.id,
+      shortCode: link.shortCode,
+      title: meta.title || link.destinationUrl,
+      url: link.destinationUrl,
+      shortUrl: link.shortUrl,
+      category: meta.category || 'Work',
+      notes: meta.notes || '',
+      savedAt: link.createdAt ? new Date(link.createdAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]
+    }
+  })
+
+  savedLinks.value = combined
+  isFetching.value = false
+}
+
+onMounted(() => {
+  syncSavedBookmarks()
+})
+
+const formatUrl = (input: string): string => {
+  let trimmed = input.trim()
+  if (!trimmed) return ''
+  if (!/^https?:\/\//i.test(trimmed)) {
+    trimmed = 'https://' + trimmed
+  }
+  return trimmed
+}
+
+const handleAddBookmark = async () => {
+  errorMsg.value = ''
+  if (!newTitle.value.trim() || !newUrl.value.trim()) return
+
+  const validUrl = formatUrl(newUrl.value)
+  const result = await createShortLink(validUrl)
+
+  if (result.success && result.link) {
+    const metaMap = getStoredMeta()
+    metaMap[result.link.id] = {
+      title: newTitle.value.trim(),
+      category: newCategory.value,
+      notes: newNotes.value.trim()
+    }
+    saveStoredMeta(metaMap)
+
+    newTitle.value = ''
+    newUrl.value = ''
+    newNotes.value = ''
+    await syncSavedBookmarks()
+  } else {
+    errorMsg.value = result.error || 'Failed to save URL to backend.'
+  }
+}
+
+const deleteBookmark = async (id: string, shortCode?: string) => {
+  errorMsg.value = ''
+  if (shortCode) {
+    const res = await deleteShortLink(shortCode)
+    if (!res.success) {
+      errorMsg.value = res.error || 'Failed to delete URL from backend.'
+      return
+    }
+  }
+
+  const metaMap = getStoredMeta()
+  delete metaMap[id]
+  if (shortCode) delete metaMap[shortCode]
+  saveStoredMeta(metaMap)
+
   savedLinks.value = savedLinks.value.filter(b => b.id !== id)
 }
 
@@ -154,13 +214,20 @@ const filteredBookmarks = () => {
           </div>
         </div>
 
+        <p v-if="errorMsg" class="text-xs text-red-500 font-medium bg-red-950/20 p-2.5 rounded-lg border border-red-900/50 flex items-center gap-2">
+          <AlertCircle class="w-4 h-4 text-red-400" />
+          <span>{{ errorMsg }}</span>
+        </p>
+
         <div class="flex justify-end">
           <button
             type="submit"
-            class="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm"
+            :disabled="isApiLoading"
+            class="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm disabled:opacity-50"
           >
-            <Bookmark class="w-4 h-4 fill-zinc-900" />
-            <span>Save URL</span>
+            <Loader2 v-if="isApiLoading" class="w-4 h-4 text-amber-600 animate-spin" />
+            <Bookmark v-else class="w-4 h-4 fill-zinc-900" />
+            <span>{{ isApiLoading ? 'Saving...' : 'Save URL' }}</span>
           </button>
         </div>
       </form>
@@ -246,7 +313,7 @@ const filteredBookmarks = () => {
             </a>
 
             <button
-              @click="deleteBookmark(bookmark.id)"
+              @click="deleteBookmark(bookmark.id, bookmark.shortCode)"
               class="p-1.5 text-zinc-500 hover:text-red-400 hover:bg-red-950/30 rounded-lg transition cursor-pointer"
               title="Remove Bookmark"
             >
