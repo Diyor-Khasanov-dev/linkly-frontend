@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
   Link2,
   Sparkles,
@@ -8,66 +8,60 @@ import {
   Trash2,
   Search,
   BarChart2,
-  ArrowUpRight
+  ArrowUpRight,
+  Loader2,
+  AlertCircle,
+  QrCode
 } from 'lucide-vue-next'
+import { useLinks, type ShortLink } from '../../composables/useLinks'
 
-interface ShortenedUrlItem {
-  id: string
-  originalUrl: string
-  shortUrl: string
-  alias: string
-  createdAt: string
-  clicks: number
-}
+const { createShortLink, fetchUserLinks, deleteShortLink, isLoading, linksList } = useLinks()
 
 const originalUrl = ref('')
 const customAlias = ref('')
 const searchQuery = ref('')
 const copiedId = ref<string | null>(null)
+const errorMsg = ref('')
+const successMsg = ref('')
+const isFetching = ref(false)
 
-const history = ref<ShortenedUrlItem[]>([
-  {
-    id: '1',
-    originalUrl: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide',
-    shortUrl: 'https://linkly.sh/mdn-js-guide',
-    alias: 'mdn-js-guide',
-    createdAt: '2025-02-28',
-    clicks: 142
-  },
-  {
-    id: '2',
-    originalUrl: 'https://tailwindcss.com/docs/installation',
-    shortUrl: 'https://linkly.sh/tailwind-docs',
-    alias: 'tailwind-docs',
-    createdAt: '2025-02-27',
-    clicks: 89
-  },
-  {
-    id: '3',
-    originalUrl: 'https://vuejs.org/guide/introduction.html',
-    shortUrl: 'https://linkly.sh/vue3-guide',
-    alias: 'vue3-guide',
-    createdAt: '2025-02-25',
-    clicks: 310
+onMounted(async () => {
+  isFetching.value = true
+  await fetchUserLinks()
+  isFetching.value = false
+})
+
+const formatUrl = (input: string): string => {
+  let trimmed = input.trim()
+  if (!trimmed) return ''
+  if (!/^https?:\/\//i.test(trimmed)) {
+    trimmed = 'https://' + trimmed
   }
-])
+  return trimmed
+}
 
-const handleCreateShortUrl = () => {
+const handleCreateShortUrl = async () => {
+  errorMsg.value = ''
+  successMsg.value = ''
+
   if (!originalUrl.value.trim()) return
 
-  const slug = customAlias.value.trim() || Math.random().toString(36).substring(2, 8)
-  const newLink: ShortenedUrlItem = {
-    id: Date.now().toString(),
-    originalUrl: originalUrl.value,
-    shortUrl: `https://linkly.sh/${slug}`,
-    alias: slug,
-    createdAt: new Date().toISOString().split('T')[0],
-    clicks: 0
-  }
+  const validUrl = formatUrl(originalUrl.value)
+  originalUrl.value = validUrl
 
-  history.value.unshift(newLink)
-  originalUrl.value = ''
-  customAlias.value = ''
+  const result = await createShortLink(validUrl, customAlias.value)
+
+  if (result.success && result.link) {
+    successMsg.value = 'Link shortened successfully!'
+    originalUrl.value = ''
+    customAlias.value = ''
+    await fetchUserLinks()
+    setTimeout(() => {
+      successMsg.value = ''
+    }, 3000)
+  } else {
+    errorMsg.value = result.error || 'Failed to shorten link.'
+  }
 }
 
 const copyToClipboard = (shortUrl: string, id: string) => {
@@ -78,8 +72,23 @@ const copyToClipboard = (shortUrl: string, id: string) => {
   }, 2000)
 }
 
-const deleteLink = (id: string) => {
-  history.value = history.value.filter((item) => item.id !== id)
+const deleteLink = async (shortCode: string) => {
+  errorMsg.value = ''
+  const result = await deleteShortLink(shortCode)
+  if (result.success) {
+    await fetchUserLinks()
+  } else {
+    errorMsg.value = result.error || 'Failed to delete link.'
+  }
+}
+
+const formatDate = (dateStr?: string) => {
+  if (!dateStr) return 'N/A'
+  try {
+    return new Date(dateStr).toISOString().split('T')[0]
+  } catch {
+    return dateStr
+  }
 }
 </script>
 
@@ -96,6 +105,17 @@ const deleteLink = (id: string) => {
       </p>
     </div>
 
+    <!-- Feedback messages -->
+    <div v-if="errorMsg" class="p-3 bg-red-950/30 border border-red-800 text-red-400 rounded-xl text-xs flex items-center gap-2">
+      <AlertCircle class="w-4 h-4 shrink-0" />
+      <span>{{ errorMsg }}</span>
+    </div>
+
+    <div v-if="successMsg" class="p-3 bg-emerald-950/30 border border-emerald-800 text-emerald-400 rounded-xl text-xs flex items-center gap-2">
+      <Check class="w-4 h-4 shrink-0" />
+      <span>{{ successMsg }}</span>
+    </div>
+
     <!-- Creation Card Form -->
     <div class="p-4 sm:p-6 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl shadow-xs space-y-4">
       <form @submit.prevent="handleCreateShortUrl" class="space-y-4">
@@ -105,7 +125,7 @@ const deleteLink = (id: string) => {
             <div class="relative">
               <input
                 v-model="originalUrl"
-                type="url"
+                type="text"
                 placeholder="https://your-long-website-link.com/page..."
                 required
                 class="w-full pl-3.5 pr-4 py-2.5 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-xs sm:text-sm font-normal text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -130,10 +150,12 @@ const deleteLink = (id: string) => {
         <div class="flex justify-end">
           <button
             type="submit"
-            class="w-full sm:w-auto px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
+            :disabled="isLoading"
+            class="w-full sm:w-auto px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer shadow-sm disabled:opacity-50"
           >
-            <Sparkles class="w-4 h-4 text-blue-600" />
-            <span>Shorten Link</span>
+            <Loader2 v-if="isLoading" class="w-4 h-4 text-blue-600 animate-spin" />
+            <Sparkles v-else class="w-4 h-4 text-blue-600" />
+            <span>{{ isLoading ? 'Shortening...' : 'Shorten Link' }}</span>
           </button>
         </div>
       </form>
@@ -156,9 +178,14 @@ const deleteLink = (id: string) => {
 
       <!-- Table / Cards List -->
       <div class="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-2xl overflow-hidden shadow-2xs">
-        <div class="divide-y divide-[var(--border-color)]">
+        <div v-if="isFetching" class="p-8 text-center text-xs text-zinc-400 flex items-center justify-center gap-2">
+          <Loader2 class="w-4 h-4 animate-spin text-blue-500" />
+          <span>Loading links from backend...</span>
+        </div>
+
+        <div v-else class="divide-y divide-[var(--border-color)]">
           <div
-            v-for="item in history.filter(i => i.alias.includes(searchQuery) || i.originalUrl.includes(searchQuery))"
+            v-for="item in linksList.filter((i: ShortLink) => (i.shortCode || '').includes(searchQuery) || (i.destinationUrl || '').includes(searchQuery))"
             :key="item.id"
             class="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 hover:bg-[var(--bg-primary)]/50 transition"
           >
@@ -173,11 +200,11 @@ const deleteLink = (id: string) => {
                   <ArrowUpRight class="w-3.5 h-3.5 shrink-0" />
                 </a>
                 <span class="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-400 font-mono shrink-0">
-                  {{ item.createdAt }}
+                  {{ formatDate(item.createdAt) }}
                 </span>
               </div>
               <p class="text-xs text-[var(--text-secondary)] truncate">
-                {{ item.originalUrl }}
+                {{ item.destinationUrl }}
               </p>
             </div>
 
@@ -185,7 +212,7 @@ const deleteLink = (id: string) => {
             <div class="flex flex-wrap items-center justify-between sm:justify-end gap-2 sm:gap-3">
               <div class="flex items-center gap-1 text-xs text-zinc-400 bg-zinc-950/40 px-2.5 py-1.5 rounded-lg border border-zinc-800">
                 <BarChart2 class="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span class="font-semibold text-zinc-200">{{ item.clicks }}</span>
+                <span class="font-semibold text-zinc-200">{{ item.clicks || 0 }}</span>
                 <span>clicks</span>
               </div>
 
@@ -199,8 +226,16 @@ const deleteLink = (id: string) => {
                   <span>{{ copiedId === item.id ? 'Copied' : 'Copy' }}</span>
                 </button>
 
+                <router-link
+                  :to="{ path: '/dashboard/qr-generator', query: { url: item.shortUrl } }"
+                  class="p-1.5 rounded-lg text-zinc-400 hover:text-purple-400 hover:bg-purple-950/30 transition"
+                  title="Generate QR Code"
+                >
+                  <QrCode class="w-4 h-4" />
+                </router-link>
+
                 <button
-                  @click="deleteLink(item.id)"
+                  @click="deleteLink(item.shortCode)"
                   class="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-950/30 transition cursor-pointer"
                   title="Delete Link"
                 >
@@ -210,7 +245,7 @@ const deleteLink = (id: string) => {
             </div>
           </div>
 
-          <div v-if="history.length === 0" class="p-8 text-center text-xs text-zinc-500">
+          <div v-if="linksList.length === 0" class="p-8 text-center text-xs text-zinc-500">
             No shortened links created yet. Shorten your first link above!
           </div>
         </div>

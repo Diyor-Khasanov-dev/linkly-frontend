@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import QRCode from 'qrcode'
 import {
   QrCode,
@@ -11,6 +12,10 @@ import {
   Palette,
   Maximize2
 } from 'lucide-vue-next'
+import { useLinks } from '../../composables/useLinks'
+
+const route = useRoute()
+const { getBackendQrCodeUrl } = useLinks()
 
 const inputUrl = ref('https://linkly.sh/creative-studio')
 const qrCanvasRef = ref<HTMLCanvasElement | null>(null)
@@ -20,12 +25,23 @@ const qrSize = ref(220)
 const copied = ref(false)
 const isGenerating = ref(false)
 
+const formatUrl = (input: string): string => {
+  let trimmed = input.trim()
+  if (!trimmed) return ''
+  if (!/^https?:\/\//i.test(trimmed)) {
+    trimmed = 'https://' + trimmed
+  }
+  return trimmed
+}
+
 const generateQRCode = async () => {
   if (!qrCanvasRef.value) return
   isGenerating.value = true
 
+  const urlToEncode = formatUrl(inputUrl.value) || 'https://linkly.sh'
+
   try {
-    await QRCode.toCanvas(qrCanvasRef.value, inputUrl.value || 'https://linkly.sh', {
+    await QRCode.toCanvas(qrCanvasRef.value, urlToEncode, {
       width: qrSize.value,
       margin: 2,
       color: {
@@ -41,6 +57,9 @@ const generateQRCode = async () => {
 }
 
 onMounted(() => {
+  if (route.query.url && typeof route.query.url === 'string') {
+    inputUrl.value = route.query.url
+  }
   generateQRCode()
 })
 
@@ -49,12 +68,43 @@ watch([inputUrl, qrFgColor, qrBgColor, qrSize], () => {
 })
 
 const downloadPNG = () => {
-  if (!qrCanvasRef.value) return
-  const dataUrl = qrCanvasRef.value.toDataURL('image/png')
-  const link = document.createElement('a')
-  link.download = 'linkly-qrcode.png'
-  link.href = dataUrl
-  link.click()
+  if (qrCanvasRef.value) {
+    const dataUrl = qrCanvasRef.value.toDataURL('image/png')
+    const link = document.createElement('a')
+    link.download = 'linkly-qrcode.png'
+    link.href = dataUrl
+    link.click()
+  } else {
+    const urlToEncode = formatUrl(inputUrl.value) || 'https://linkly.sh'
+    const imgUrl = getBackendQrCodeUrl(urlToEncode, {
+      size: qrSize.value,
+      dark: qrFgColor.value,
+      light: qrBgColor.value
+    })
+    window.open(imgUrl, '_blank')
+  }
+}
+
+const downloadSVG = () => {
+  const urlToEncode = formatUrl(inputUrl.value) || 'https://linkly.sh'
+  QRCode.toString(urlToEncode, {
+    type: 'svg',
+    width: qrSize.value,
+    margin: 2,
+    color: {
+      dark: qrFgColor.value,
+      light: qrBgColor.value
+    }
+  }).then(svgString => {
+    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
+    const link = document.createElement('a')
+    link.href = URL.createObjectURL(blob)
+    link.download = 'linkly-qrcode.svg'
+    link.click()
+    URL.revokeObjectURL(link.href)
+  }).catch(err => {
+    console.error('Failed to export SVG', err)
+  })
 }
 
 const copyUrl = () => {
@@ -90,13 +140,13 @@ const copyUrl = () => {
           <div class="relative">
             <input
               v-model="inputUrl"
-              type="url"
+              type="text"
               placeholder="https://yourdomain.com/landing-page"
               class="w-full pl-3.5 pr-10 py-2.5 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-xs sm:text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-purple-500 font-mono"
             />
             <button
               @click="copyUrl"
-              class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-zinc-400 hover:text-white rounded-lg"
+              class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-zinc-400 hover:text-white rounded-lg cursor-pointer"
               title="Copy URL"
             >
               <Check v-if="copied" class="w-4 h-4 text-emerald-400" />
@@ -183,14 +233,23 @@ const copyUrl = () => {
           {{ inputUrl || 'https://linkly.sh' }}
         </p>
 
-        <!-- Download Action Button -->
-        <button
-          @click="downloadPNG"
-          class="w-full py-3 px-4 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
-        >
-          <Download class="w-4 h-4" />
-          <span>Download PNG Image</span>
-        </button>
+        <!-- Download Action Buttons -->
+        <div class="w-full flex items-center gap-3">
+          <button
+            @click="downloadPNG"
+            class="flex-1 py-3 px-4 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
+          >
+            <Download class="w-4 h-4" />
+            <span>PNG</span>
+          </button>
+          <button
+            @click="downloadSVG"
+            class="flex-1 py-3 px-4 bg-[var(--bg-primary)] border border-[var(--border-color)] hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition cursor-pointer shadow-2xs"
+          >
+            <Download class="w-4 h-4" />
+            <span>SVG</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
