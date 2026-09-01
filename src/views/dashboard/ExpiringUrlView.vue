@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
   Clock,
   Sparkles,
@@ -8,66 +8,100 @@ import {
   ArrowUpRight,
   Trash2,
   Calendar,
-  MousePointerClick
+  MousePointerClick,
+  Loader2,
+  AlertCircle
 } from 'lucide-vue-next'
+import { useLinks } from '../../composables/useLinks'
 
 interface ExpiringUrlItem {
   id: string
+  shortCode: string
   originalUrl: string
   shortUrl: string
-  expiresAt: string
-  maxClicks: number
+  expiresAt: string | null
+  maxClicks: number | null
   currentClicks: number
   status: 'active' | 'expired'
 }
+
+const { createShortLink, deleteShortLink, fetchUserLinks, linksList, isLoading: isApiLoading } = useLinks()
 
 const targetUrl = ref('')
 const expireDate = ref('')
 const clickLimit = ref<number | null>(50)
 const copiedId = ref<string | null>(null)
+const errorMsg = ref('')
+const isFetching = ref(false)
 
-const expiringLinks = ref<ExpiringUrlItem[]>([
-  {
-    id: '1',
-    originalUrl: 'https://staging.linkly.sh/beta-test-v4',
-    shortUrl: 'https://linkly.sh/exp-beta-4',
-    expiresAt: '2025-03-05 18:00',
-    maxClicks: 100,
-    currentClicks: 42,
-    status: 'active'
-  },
-  {
-    id: '2',
-    originalUrl: 'https://linkly.sh/promotions/flash-sale-50',
-    shortUrl: 'https://linkly.sh/exp-flash-50',
-    expiresAt: '2025-02-28 12:00',
-    maxClicks: 200,
-    currentClicks: 200,
-    status: 'expired'
+const expiringLinks = ref<ExpiringUrlItem[]>([])
+
+const formatUrl = (input: string): string => {
+  let trimmed = input.trim()
+  if (!trimmed) return ''
+  if (!/^https?:\/\//i.test(trimmed)) {
+    trimmed = 'https://' + trimmed
   }
-])
+  return trimmed
+}
 
-const handleCreateExpiringUrl = () => {
+const loadExpiringLinks = async () => {
+  isFetching.value = true
+  await fetchUserLinks()
+
+  const list: ExpiringUrlItem[] = linksList.value
+    .filter(link => link.expiresAt || link.maxClicks || link.isExpired)
+    .map(link => {
+      const isExpiredByTime = link.expiresAt ? new Date(link.expiresAt).getTime() < Date.now() : false
+      const isExpiredByClicks = link.maxClicks ? link.clicks >= link.maxClicks : false
+      const isExpired = link.isExpired || isExpiredByTime || isExpiredByClicks
+
+      return {
+        id: link.id,
+        shortCode: link.shortCode,
+        originalUrl: link.destinationUrl,
+        shortUrl: link.shortUrl,
+        expiresAt: link.expiresAt ? link.expiresAt.replace('T', ' ').slice(0, 16) : null,
+        maxClicks: link.maxClicks || null,
+        currentClicks: link.clicks || 0,
+        status: isExpired ? 'expired' : 'active'
+      }
+    })
+
+  expiringLinks.value = list
+  isFetching.value = false
+}
+
+onMounted(() => {
+  loadExpiringLinks()
+})
+
+const handleCreateExpiringUrl = async () => {
+  errorMsg.value = ''
   if (!targetUrl.value.trim()) return
 
-  const slug = 'exp-' + Math.random().toString(36).substring(2, 7)
-  const defaultExpire = expireDate.value
-    ? expireDate.value.replace('T', ' ')
-    : new Date(Date.now() + 86400000 * 2).toISOString().slice(0, 16).replace('T', ' ')
+  const validUrl = formatUrl(targetUrl.value)
+  let isoExpiresAt: string | undefined
 
-  const newItem: ExpiringUrlItem = {
-    id: Date.now().toString(),
-    originalUrl: targetUrl.value.trim(),
-    shortUrl: `https://linkly.sh/${slug}`,
-    expiresAt: defaultExpire,
-    maxClicks: clickLimit.value || 100,
-    currentClicks: 0,
-    status: 'active'
+  if (expireDate.value) {
+    isoExpiresAt = new Date(expireDate.value).toISOString()
+  } else {
+    // Default 48h expiration
+    isoExpiresAt = new Date(Date.now() + 48 * 3600 * 1000).toISOString()
   }
 
-  expiringLinks.value.unshift(newItem)
-  targetUrl.value = ''
-  expireDate.value = ''
+  const result = await createShortLink(validUrl, {
+    expiresAt: isoExpiresAt,
+    maxClicks: clickLimit.value || undefined
+  })
+
+  if (result.success && result.link) {
+    targetUrl.value = ''
+    expireDate.value = ''
+    await loadExpiringLinks()
+  } else {
+    errorMsg.value = result.error || 'Failed to create expiring link.'
+  }
 }
 
 const copyToClipboard = (shortUrl: string, id: string) => {
@@ -76,8 +110,14 @@ const copyToClipboard = (shortUrl: string, id: string) => {
   setTimeout(() => (copiedId.value = null), 2000)
 }
 
-const deleteItem = (id: string) => {
-  expiringLinks.value = expiringLinks.value.filter(item => item.id !== id)
+const deleteItem = async (shortCode: string) => {
+  errorMsg.value = ''
+  const res = await deleteShortLink(shortCode)
+  if (res.success) {
+    await loadExpiringLinks()
+  } else {
+    errorMsg.value = res.error || 'Failed to delete expiring link.'
+  }
 }
 </script>
 
@@ -142,13 +182,20 @@ const deleteItem = (id: string) => {
           </div>
         </div>
 
+        <p v-if="errorMsg" class="text-xs text-red-500 font-medium bg-red-950/20 p-2.5 rounded-lg border border-red-900/50 flex items-center gap-2">
+          <AlertCircle class="w-4 h-4 text-red-400" />
+          <span>{{ errorMsg }}</span>
+        </p>
+
         <div class="flex justify-end pt-2">
           <button
             type="submit"
-            class="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm"
+            :disabled="isApiLoading"
+            class="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm disabled:opacity-50"
           >
-            <Clock class="w-4 h-4 text-rose-600" />
-            <span>Generate Expiring Link</span>
+            <Loader2 v-if="isApiLoading" class="w-4 h-4 text-rose-600 animate-spin" />
+            <Clock v-else class="w-4 h-4 text-rose-600" />
+            <span>{{ isApiLoading ? 'Creating...' : 'Generate Expiring Link' }}</span>
           </button>
         </div>
       </form>
@@ -193,13 +240,17 @@ const deleteItem = (id: string) => {
               </p>
 
               <div class="flex items-center gap-4 text-[11px] text-zinc-400 pt-1">
-                <span class="flex items-center gap-1">
+                <span v-if="item.expiresAt" class="flex items-center gap-1">
                   <Calendar class="w-3 h-3 text-zinc-500" />
                   Expires: {{ item.expiresAt }}
                 </span>
-                <span class="flex items-center gap-1">
+                <span v-if="item.maxClicks" class="flex items-center gap-1">
                   <MousePointerClick class="w-3 h-3 text-zinc-500" />
                   Clicks: {{ item.currentClicks }} / {{ item.maxClicks }}
+                </span>
+                <span v-else class="flex items-center gap-1">
+                  <MousePointerClick class="w-3 h-3 text-zinc-500" />
+                  Clicks: {{ item.currentClicks }}
                 </span>
               </div>
             </div>
@@ -217,7 +268,7 @@ const deleteItem = (id: string) => {
               </button>
 
               <button
-                @click="deleteItem(item.id)"
+                @click="deleteItem(item.shortCode)"
                 class="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-red-950/30 transition cursor-pointer"
                 title="Delete item"
               >

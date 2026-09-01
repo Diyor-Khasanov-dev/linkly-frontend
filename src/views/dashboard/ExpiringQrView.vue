@@ -10,11 +10,15 @@ import {
   Clock,
   Trash2,
   Calendar,
-  Link2
+  Link2,
+  Loader2,
+  AlertCircle
 } from 'lucide-vue-next'
+import { useLinks } from '../../composables/useLinks'
 
 interface ExpiringQrItem {
   id: string
+  shortCode: string
   title: string
   targetUrl: string
   shortUrl: string
@@ -22,35 +26,51 @@ interface ExpiringQrItem {
   ttlHours: number
 }
 
-const targetUrl = ref('https://linkly.sh/event-pass-2025')
+const STORAGE_KEY = 'linkly_expiring_qr_titles'
+
+const { createShortLink, deleteShortLink, fetchUserLinks, linksList, isLoading: isApiLoading } = useLinks()
+
+const targetUrl = ref('https://github.com/vuejs/core')
 const ttlHours = ref(24)
 const qrTitle = ref('VIP Pass QR')
 const previewCanvasRef = ref<HTMLCanvasElement | null>(null)
 const copiedId = ref<string | null>(null)
+const errorMsg = ref('')
+const isFetching = ref(false)
 
-const expiringQrCodes = ref<ExpiringQrItem[]>([
-  {
-    id: '1',
-    title: 'Flash Event Entry Pass',
-    targetUrl: 'https://linkly.sh/vip-entry-99',
-    shortUrl: 'https://linkly.sh/eqr-vip-99',
-    expiresAt: '2025-03-01 20:00',
-    ttlHours: 12
-  },
-  {
-    id: '2',
-    title: 'One-time Discount Coupon',
-    targetUrl: 'https://linkly.sh/coupon-50-off',
-    shortUrl: 'https://linkly.sh/eqr-c50',
-    expiresAt: '2025-03-02 18:00',
-    ttlHours: 48
+const expiringQrCodes = ref<ExpiringQrItem[]>([])
+
+const getStoredTitles = (): Record<string, string> => {
+  try {
+    const d = localStorage.getItem(STORAGE_KEY)
+    return d ? JSON.parse(d) : {}
+  } catch {
+    return {}
   }
-])
+}
+
+const saveStoredTitles = (titlesMap: Record<string, string>) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(titlesMap))
+  } catch (e) {
+    console.error('Failed to save titles to localStorage', e)
+  }
+}
+
+const formatUrl = (input: string): string => {
+  let trimmed = input.trim()
+  if (!trimmed) return ''
+  if (!/^https?:\/\//i.test(trimmed)) {
+    trimmed = 'https://' + trimmed
+  }
+  return trimmed
+}
 
 const renderPreviewQr = async () => {
   if (!previewCanvasRef.value) return
+  const validUrl = formatUrl(targetUrl.value) || 'https://linkly.sh'
   try {
-    await QRCode.toCanvas(previewCanvasRef.value, targetUrl.value || 'https://linkly.sh', {
+    await QRCode.toCanvas(previewCanvasRef.value, validUrl, {
       width: 180,
       margin: 2,
       color: {
@@ -63,25 +83,61 @@ const renderPreviewQr = async () => {
   }
 }
 
-onMounted(() => renderPreviewQr())
+const loadExpiringQrs = async () => {
+  isFetching.value = true
+  await fetchUserLinks()
+  const titlesMap = getStoredTitles()
+
+  const list: ExpiringQrItem[] = linksList.value
+    .filter(link => link.expiresAt)
+    .map(link => {
+      const expTime = new Date(link.expiresAt!).getTime()
+      const createdTime = new Date(link.createdAt).getTime()
+      const diffHours = Math.max(1, Math.round((expTime - createdTime) / (3600 * 1000)))
+      const title = titlesMap[link.id] || titlesMap[link.shortCode] || 'Expiring Link QR'
+
+      return {
+        id: link.id,
+        shortCode: link.shortCode,
+        title,
+        targetUrl: link.destinationUrl,
+        shortUrl: link.shortUrl,
+        expiresAt: link.expiresAt ? link.expiresAt.replace('T', ' ').slice(0, 16) : '',
+        ttlHours: diffHours
+      }
+    })
+
+  expiringQrCodes.value = list
+  isFetching.value = false
+}
+
+onMounted(async () => {
+  renderPreviewQr()
+  await loadExpiringQrs()
+})
+
 watch([targetUrl], () => renderPreviewQr())
 
-const handleGenerateExpiringQr = () => {
+const handleGenerateExpiringQr = async () => {
+  errorMsg.value = ''
   if (!targetUrl.value.trim()) return
 
-  const slug = 'eqr-' + Math.random().toString(36).substring(2, 7)
-  const expiryDate = new Date(Date.now() + ttlHours.value * 3600 * 1000)
+  const validUrl = formatUrl(targetUrl.value)
+  const isoExpiresAt = new Date(Date.now() + ttlHours.value * 3600 * 1000).toISOString()
 
-  const newQr: ExpiringQrItem = {
-    id: Date.now().toString(),
-    title: qrTitle.value.trim() || 'Temporary QR Code',
-    targetUrl: targetUrl.value.trim(),
-    shortUrl: `https://linkly.sh/${slug}`,
-    expiresAt: expiryDate.toISOString().slice(0, 16).replace('T', ' '),
-    ttlHours: ttlHours.value
+  const result = await createShortLink(validUrl, {
+    expiresAt: isoExpiresAt
+  })
+
+  if (result.success && result.link) {
+    const titlesMap = getStoredTitles()
+    titlesMap[result.link.id] = qrTitle.value.trim() || 'Expiring Link QR'
+    saveStoredTitles(titlesMap)
+
+    await loadExpiringQrs()
+  } else {
+    errorMsg.value = result.error || 'Failed to create expiring QR link.'
   }
-
-  expiringQrCodes.value.unshift(newQr)
 }
 
 const copyToClipboard = (shortUrl: string, id: string) => {
@@ -90,8 +146,19 @@ const copyToClipboard = (shortUrl: string, id: string) => {
   setTimeout(() => (copiedId.value = null), 2000)
 }
 
-const deleteQr = (id: string) => {
-  expiringQrCodes.value = expiringQrCodes.value.filter(q => q.id !== id)
+const deleteQr = async (id: string, shortCode: string) => {
+  errorMsg.value = ''
+  const res = await deleteShortLink(shortCode)
+  if (res.success) {
+    const titlesMap = getStoredTitles()
+    delete titlesMap[id]
+    delete titlesMap[shortCode]
+    saveStoredTitles(titlesMap)
+
+    await loadExpiringQrs()
+  } else {
+    errorMsg.value = res.error || 'Failed to delete expiring QR.'
+  }
 }
 
 const downloadPreviewPNG = () => {
@@ -168,13 +235,20 @@ const downloadPreviewPNG = () => {
             />
           </div>
 
+          <p v-if="errorMsg" class="text-xs text-red-500 font-medium bg-red-950/20 p-2.5 rounded-lg border border-red-900/50 flex items-center gap-2">
+            <AlertCircle class="w-4 h-4 text-red-400" />
+            <span>{{ errorMsg }}</span>
+          </p>
+
           <div class="flex justify-end pt-2">
             <button
               type="submit"
-              class="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm"
+              :disabled="isApiLoading"
+              class="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm disabled:opacity-50"
             >
-              <Timer class="w-4 h-4 text-rose-600" />
-              <span>Create Expiring QR</span>
+              <Loader2 v-if="isApiLoading" class="w-4 h-4 text-rose-600 animate-spin" />
+              <Timer v-else class="w-4 h-4 text-rose-600" />
+              <span>{{ isApiLoading ? 'Creating...' : 'Create Expiring QR' }}</span>
             </button>
           </div>
         </form>
@@ -243,7 +317,7 @@ const downloadPreviewPNG = () => {
             </button>
 
             <button
-              @click="deleteQr(item.id)"
+              @click="deleteQr(item.id, item.shortCode)"
               class="p-1.5 text-zinc-500 hover:text-red-400 hover:bg-red-950/30 rounded-lg transition cursor-pointer"
             >
               <Trash2 class="w-4 h-4" />
