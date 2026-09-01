@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import QRCode from 'qrcode'
 import {
   Link2,
@@ -13,12 +12,12 @@ import {
   Settings2,
   ExternalLink,
   ShieldCheck,
-  Zap
+  Zap,
+  Loader2
 } from 'lucide-vue-next'
-import { useAuth } from '../composables/useAuth'
+import { useLinks } from '../composables/useLinks'
 
-const router = useRouter()
-const { isAuthenticated } = useAuth()
+const { createShortLink, getBackendQrCodeUrl, isLoading } = useLinks()
 
 const longUrl = ref('')
 const customAlias = ref('')
@@ -27,7 +26,6 @@ const autoCopy = ref(true)
 
 const shortenedLink = ref<string | null>(null)
 const copied = ref(false)
-const isLoading = ref(false)
 const errorMsg = ref('')
 
 // QR code generation state
@@ -42,25 +40,45 @@ onMounted(() => {
   generateQRCode()
 })
 
-const handleWidgetAction = () => {
-  if (isAuthenticated.value) {
-    router.push('/dashboard')
-  } else {
-    router.push('/register')
+const formatUrl = (input: string): string => {
+  let trimmed = input.trim()
+  if (!trimmed) return ''
+  if (!/^https?:\/\//i.test(trimmed)) {
+    trimmed = 'https://' + trimmed
   }
+  return trimmed
 }
 
-const handleShorten = () => {
-  handleWidgetAction()
-}
+const handleShorten = async () => {
+  errorMsg.value = ''
+  shortenedLink.value = null
 
-const handleRedirectToRegister = () => {
-  handleWidgetAction()
+  if (!longUrl.value.trim()) {
+    errorMsg.value = 'Please enter a valid URL.'
+    return
+  }
+
+  const validUrl = formatUrl(longUrl.value)
+  longUrl.value = validUrl
+
+  const result = await createShortLink(validUrl, customAlias.value)
+
+  if (result.success && result.link) {
+    shortenedLink.value = result.link.shortUrl
+    if (autoCopy.value) {
+      navigator.clipboard.writeText(result.link.shortUrl)
+      copied.value = true
+      setTimeout(() => (copied.value = false), 2000)
+    }
+    generateQRCode()
+  } else {
+    errorMsg.value = result.error || 'Failed to shorten URL.'
+  }
 }
 
 const generateQRCode = async () => {
   if (!qrCanvasRef.value) return
-  const urlToEncode = shortenedLink.value || longUrl.value || 'https://linkly.sh'
+  const urlToEncode = shortenedLink.value || formatUrl(longUrl.value) || 'https://linkly.sh'
 
   try {
     await QRCode.toCanvas(qrCanvasRef.value, urlToEncode, {
@@ -76,7 +94,7 @@ const generateQRCode = async () => {
   }
 }
 
-watch([shortenedLink, qrFgColor, qrBgColor, selectedTab], () => {
+watch([shortenedLink, qrFgColor, qrBgColor, qrSize, selectedTab], () => {
   if (selectedTab.value === 'qr' || shortenedLink.value) {
     setTimeout(generateQRCode, 50)
   }
@@ -89,6 +107,46 @@ const copyToClipboard = () => {
   setTimeout(() => {
     copied.value = false
   }, 2000)
+}
+
+const downloadQrCode = (format: 'png' | 'svg') => {
+  const urlToEncode = shortenedLink.value || formatUrl(longUrl.value) || 'https://linkly.sh'
+
+  if (format === 'png') {
+    if (qrCanvasRef.value) {
+      const dataUrl = qrCanvasRef.value.toDataURL('image/png')
+      const link = document.createElement('a')
+      link.download = 'linkly-qrcode.png'
+      link.href = dataUrl
+      link.click()
+    } else {
+      const imgUrl = getBackendQrCodeUrl(urlToEncode, {
+        size: qrSize.value,
+        dark: qrFgColor.value,
+        light: qrBgColor.value
+      })
+      window.open(imgUrl, '_blank')
+    }
+  } else if (format === 'svg') {
+    QRCode.toString(urlToEncode, {
+      type: 'svg',
+      width: qrSize.value,
+      margin: 2,
+      color: {
+        dark: qrFgColor.value,
+        light: qrBgColor.value
+      }
+    }).then(svgString => {
+      const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' })
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob)
+      link.download = 'linkly-qrcode.svg'
+      link.click()
+      URL.revokeObjectURL(link.href)
+    }).catch(err => {
+      console.error('Failed to export SVG', err)
+    })
+  }
 }
 </script>
 
@@ -162,7 +220,8 @@ const copyToClipboard = () => {
               :disabled="isLoading"
               class="px-6 py-3.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition cursor-pointer shadow-none disabled:opacity-50"
             >
-              <Sparkles v-if="!isLoading" class="w-4 h-4 text-blue-600" />
+              <Loader2 v-if="isLoading" class="w-4 h-4 text-blue-600 animate-spin" />
+              <Sparkles v-else class="w-4 h-4 text-blue-600" />
               <span>{{ isLoading ? 'Shortening...' : 'Shorten Link' }}</span>
               <ArrowRight v-if="!isLoading" class="w-4 h-4" />
             </button>
@@ -192,7 +251,9 @@ const copyToClipboard = () => {
           </div>
         </form>
 
-        <p v-if="errorMsg" class="text-xs text-red-500 mt-1 font-medium">{{ errorMsg }}</p>
+        <p v-if="errorMsg" class="text-xs text-red-500 mt-1 font-medium bg-red-950/20 p-2.5 rounded-lg border border-red-900/50 flex items-center gap-2">
+          <span>{{ errorMsg }}</span>
+        </p>
 
         <!-- Result Box -->
         <div v-if="shortenedLink" class="mt-6 pt-6 border-t border-[var(--border-color)] space-y-4">
@@ -298,14 +359,14 @@ const copyToClipboard = () => {
             <!-- Download Buttons -->
             <div class="pt-2 flex items-center gap-3">
               <button
-                @click="handleRedirectToRegister"
+                @click="downloadQrCode('png')"
                 class="flex-1 py-2.5 px-4 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition cursor-pointer shadow-sm"
               >
                 <Download class="w-4 h-4" />
                 <span>Download PNG</span>
               </button>
               <button
-                @click="handleRedirectToRegister"
+                @click="downloadQrCode('svg')"
                 class="flex-1 py-2.5 px-4 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition cursor-pointer shadow-2xs"
               >
                 <Download class="w-4 h-4" />
