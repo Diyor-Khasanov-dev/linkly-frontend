@@ -14,7 +14,6 @@ import UrlSaverView from '../views/dashboard/UrlSaverView.vue'
 import QrGeneratorView from '../views/dashboard/QrGeneratorView.vue'
 import ExpiringUrlView from '../views/dashboard/ExpiringUrlView.vue'
 import ExpiringQrView from '../views/dashboard/ExpiringQrView.vue'
-import AnalyticsView from '../views/dashboard/AnalyticsView.vue'
 import ProfileView from '../views/dashboard/ProfileView.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -66,11 +65,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'expiring-qr',
         name: 'DashboardExpiringQr',
         component: ExpiringQrView,
-      },
-      {
-        path: 'analytics',
-        name: 'DashboardAnalytics',
-        component: AnalyticsView,
       },
       {
         path: 'profile',

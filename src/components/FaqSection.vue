@@ -6,8 +6,8 @@ const openIndex = ref<number | null>(0)
 
 const faqs = [
   {
-    q: 'How does Linkly shorten URLs and track analytics?',
-    a: 'When you create a shortened URL, Linkly generates a unique hash identifier. Our global edge servers instantly route visitors to your target URL while logging non-sensitive metrics like country origin, device type, and referral channel.'
+    q: 'How does Linkly shorten URLs?',
+    a: 'When you create a shortened URL, Linkly generates a unique hash identifier. Our global edge servers instantly route visitors to your target URL.'
   },
   {
     q: 'Can I customize my shortened link slug or use my custom domain?',
@@ -19,7 +19,7 @@ const faqs = [
   },
   {
     q: 'Is there a limit on clicks or links on the Free plan?',
-    a: 'The Free Starter plan includes up to 1,000 links per month with full access to standard link shorteners, QR generator, and 7-day click analytics. For higher limits, you can easily upgrade to Pro.'
+    a: 'The Free Starter plan includes up to 1,000 links per month with full access to standard link shorteners and QR generator. For higher limits, you can easily upgrade to Pro.'
   },
   {
     q: 'Are Linkly shortened links secure?',

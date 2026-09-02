@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import LinkShortenerWidget from '../components/LinkShortenerWidget.vue'
-import LinkAnalyzer from '../components/LinkAnalyzer.vue'
 import Features from '../components/Features.vue'
 import FaqSection from '../components/FaqSection.vue'
 import { Sparkles, ArrowRight } from 'lucide-vue-next'
@@ -28,7 +27,7 @@ const { isAuthenticated } = useAuth()
         <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-50 leading-[1.15] sm:leading-[1.1]">
           Shorten URLs.<br />
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-500">
-            Analyze Clicks.
+            Organize Links.
           </span>
           <span class="text-blue-500 font-serif italic font-normal"> Generate QRs.</span>
         </h1>
@@ -44,7 +43,7 @@ const { isAuthenticated } = useAuth()
         </div>
 
         <!-- Social Proof / Stats Strip -->
-        <div class="pt-8 sm:pt-12 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto border-t border-zinc-800 text-left">
+        <div class="pt-8 sm:pt-12 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto border-t border-zinc-800 text-left">
           <div class="p-3 rounded-xl bg-zinc-800/40 border border-zinc-800 space-y-0.5 shadow-2xs">
             <div class="text-xl sm:text-2xl font-bold font-mono text-zinc-100">10M+</div>
             <div class="text-[11px] sm:text-xs text-zinc-400 font-medium">Links Shortened</div>
@@ -57,16 +56,9 @@ const { isAuthenticated } = useAuth()
             <div class="text-xl sm:text-2xl font-bold font-mono text-zinc-100">&lt;15ms</div>
             <div class="text-[11px] sm:text-xs text-zinc-400 font-medium">Global Latency</div>
           </div>
-          <div class="p-3 rounded-xl bg-zinc-800/40 border border-zinc-800 space-y-0.5 shadow-2xs">
-            <div class="text-xl sm:text-2xl font-bold font-mono text-zinc-100">150k+</div>
-            <div class="text-[11px] sm:text-xs text-zinc-400 font-medium">Active Analytics</div>
-          </div>
         </div>
       </div>
     </section>
-
-    <!-- Real-time Link Analyzer Section -->
-    <LinkAnalyzer />
 
     <!-- Features Section -->
     <Features />
