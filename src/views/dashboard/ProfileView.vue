@@ -14,9 +14,7 @@ const { currentUser, fetchUser } = useAuth()
 
 const workspaceName = ref(currentUser.value?.workspaceName || 'My Workspace')
 const email = ref(currentUser.value?.email || '')
-const apiKey = ref('lk_live_99a8b7c6d5e4f3a2b1')
 const isSaved = ref(false)
-const isCopiedKey = ref(false)
 
 onMounted(async () => {
   await fetchUser()
