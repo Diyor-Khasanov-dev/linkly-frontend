@@ -4,12 +4,8 @@ import { useAuth } from '../../composables/useAuth'
 import {
   User,
   Mail,
-  Key,
-  Copy,
   Check,
-  Sparkles,
   Save,
-  RefreshCw,
   Building2,
   ShieldCheck
 } from 'lucide-vue-next'
