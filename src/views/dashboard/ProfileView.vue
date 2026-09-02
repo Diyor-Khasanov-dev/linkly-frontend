@@ -7,35 +7,71 @@ import {
   Check,
   Save,
   Building2,
-  ShieldCheck
+  ShieldCheck,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  Loader2
 } from 'lucide-vue-next'
 
-const { currentUser, fetchUser } = useAuth()
+const { currentUser, fetchUser, updateProfile, isLoading } = useAuth()
 
 const workspaceName = ref(currentUser.value?.workspaceName || 'My Workspace')
 const email = ref(currentUser.value?.email || '')
-const isSaved = ref(false)
+const password = ref('')
+const showPassword = ref(false)
 
-onMounted(async () => {
-  await fetchUser()
+const isSaved = ref(false)
+const successMessage = ref('')
+const errorMessage = ref('')
+
+const syncUserData = () => {
   if (currentUser.value) {
     workspaceName.value = currentUser.value.workspaceName || 'My Workspace'
     email.value = currentUser.value.email || ''
   }
+}
+
+onMounted(async () => {
+  await fetchUser()
+  syncUserData()
 })
 
-watch(currentUser, (newUser) => {
-  if (newUser) {
-    workspaceName.value = newUser.workspaceName || 'My Workspace'
-    email.value = newUser.email || ''
+watch(currentUser, () => {
+  syncUserData()
+})
+
+const handleSaveProfile = async () => {
+  errorMessage.value = ''
+  successMessage.value = ''
+
+  if (password.value && password.value.length < 8) {
+    errorMessage.value = 'Password must be at least 8 characters long.'
+    return
   }
-})
 
-const handleSaveProfile = () => {
-  isSaved.value = true
-  setTimeout(() => {
-    isSaved.value = false
-  }, 2500)
+  const payload: { workspaceName?: string; password?: string } = {
+    workspaceName: workspaceName.value.trim()
+  }
+
+  if (password.value) {
+    payload.password = password.value
+  }
+
+  const result = await updateProfile(payload)
+
+  if (result.success) {
+    isSaved.value = true
+    successMessage.value = result.message || 'Profile updated successfully!'
+    password.value = ''
+    setTimeout(() => {
+      isSaved.value = false
+      successMessage.value = ''
+    }, 3000)
+  } else {
+    errorMessage.value = result.error || 'Failed to update profile.'
+  }
 }
 </script>
 
@@ -48,7 +84,7 @@ const handleSaveProfile = () => {
         <span>User Profile & Account</span>
       </h1>
       <p class="text-xs sm:text-sm text-[var(--text-secondary)]">
-        Manage your personal account settings, security keys, and subscription plan.
+        Manage your workspace name, email address, and security credentials.
       </p>
     </div>
 
@@ -64,23 +100,41 @@ const handleSaveProfile = () => {
         </span>
       </div>
 
+      <!-- Feedback Banners -->
+      <div v-if="errorMessage" class="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-xs sm:text-sm text-rose-400 flex items-center gap-2">
+        <AlertCircle class="w-4 h-4 flex-shrink-0" />
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <div v-if="isSaved" class="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs sm:text-sm text-emerald-400 flex items-center gap-2">
+        <Check class="w-4 h-4 flex-shrink-0" />
+        <span>{{ successMessage }}</span>
+      </div>
+
       <form @submit.prevent="handleSaveProfile" class="space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Workspace Name (Editable) -->
           <div>
-            <label class="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Workspace Name</label>
+            <label class="block text-xs font-semibold text-[var(--text-secondary)] mb-1">
+              Workspace Name <span class="text-xs text-blue-400">(Editable)</span>
+            </label>
             <div class="relative">
               <Building2 class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
               <input
                 v-model="workspaceName"
                 type="text"
                 required
+                placeholder="Enter workspace name"
                 class="w-full pl-9 pr-3.5 py-2.5 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-xs sm:text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
 
+          <!-- Email Address (ReadOnly / Not Editable) -->
           <div>
-            <label class="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Email Address</label>
+            <label class="block text-xs font-semibold text-[var(--text-secondary)] mb-1">
+              Email Address <span class="text-xs text-zinc-500">(Not editable)</span>
+            </label>
             <div class="relative">
               <Mail class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
               <input
@@ -94,6 +148,30 @@ const handleSaveProfile = () => {
           </div>
         </div>
 
+        <!-- Password Field (Editable) -->
+        <div>
+          <label class="block text-xs font-semibold text-[var(--text-secondary)] mb-1">
+            New Password <span class="text-xs text-blue-400">(Editable - leave blank to keep current password)</span>
+          </label>
+          <div class="relative">
+            <Lock class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <input
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              placeholder="Enter new password (min. 8 characters)"
+              class="w-full pl-9 pr-10 py-2.5 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-xs sm:text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="button"
+              @click="showPassword = !showPassword"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-[var(--text-primary)] focus:outline-none"
+            >
+              <EyeOff v-if="showPassword" class="w-4 h-4" />
+              <Eye v-else class="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
         <div class="flex items-center justify-between pt-2">
           <span v-if="isSaved" class="text-xs font-medium text-emerald-400 flex items-center gap-1">
             <Check class="w-4 h-4" /> Profile saved!
@@ -102,14 +180,15 @@ const handleSaveProfile = () => {
 
           <button
             type="submit"
-            class="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm"
+            :disabled="isLoading"
+            class="px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-50 text-zinc-900 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-2 transition cursor-pointer shadow-sm"
           >
-            <Save class="w-4 h-4" />
-            <span>Save Changes</span>
+            <Loader2 v-if="isLoading" class="w-4 h-4 animate-spin" />
+            <Save v-else class="w-4 h-4" />
+            <span>{{ isLoading ? 'Saving...' : 'Save Changes' }}</span>
           </button>
         </div>
       </form>
     </div>
-
   </div>
 </template>
