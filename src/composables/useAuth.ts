@@ -12,6 +12,10 @@ export interface User {
   isVerificated?: boolean
   roles?: string[]
   name?: string
+  password?: {
+    isSet?: boolean
+  }
+  hasPassword?: boolean
 }
 
 export interface AuthResponse {
@@ -222,6 +226,55 @@ export function useAuth() {
     return { success: true, message: 'Logged out successfully.' }
   }
 
+  // PATCH /api/auth/getme
+  const updateProfile = async (payload: { workspaceName?: string; password?: string }): Promise<AuthResponse> => {
+    if (!accessToken.value) {
+      return { success: false, error: 'No access token available' }
+    }
+
+    isLoading.value = true
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/getme`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken.value}`,
+        },
+        body: JSON.stringify(payload),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          clearAuthSession()
+        }
+        return {
+          success: false,
+          error: data.message || 'Failed to update profile.',
+        }
+      }
+
+      if (data.user) {
+        currentUser.value = data.user
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(data.user))
+      }
+
+      return {
+        success: true,
+        message: data.message || 'Profile updated successfully.',
+        user: data.user,
+      }
+    } catch (err: any) {
+      return {
+        success: false,
+        error: err.message || 'Network error updating user profile.',
+      }
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   return {
     accessToken,
     currentUser,
@@ -230,6 +283,7 @@ export function useAuth() {
     register,
     login,
     fetchUser,
+    updateProfile,
     logout,
   }
 }
