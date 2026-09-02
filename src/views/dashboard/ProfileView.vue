@@ -39,18 +39,6 @@ const handleSaveProfile = () => {
     isSaved.value = false
   }, 2500)
 }
-
-const copyApiKey = () => {
-  navigator.clipboard.writeText(apiKey.value)
-  isCopiedKey.value = true
-  setTimeout(() => {
-    isCopiedKey.value = false
-  }, 2000)
-}
-
-const regenerateKey = () => {
-  apiKey.value = 'lk_live_' + Math.random().toString(36).substring(2, 18)
-}
 </script>
 
 <template>
