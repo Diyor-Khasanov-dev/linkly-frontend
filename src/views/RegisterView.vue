@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
-import { Link2, Mail, Lock, Building2, ArrowRight, CheckCircle2 } from 'lucide-vue-next'
+import { Link2, Mail, Lock, Building2, ArrowRight, CheckCircle2, Eye, EyeOff } from 'lucide-vue-next'
 
 const router = useRouter()
 const { register, isLoading } = useAuth()
@@ -10,6 +10,7 @@ const { register, isLoading } = useAuth()
 const workspaceName = ref('')
 const email = ref('')
 const password = ref('')
+const showPassword = ref(false)
 const agreeTerms = ref(true)
 const errorMessage = ref('')
 
@@ -99,12 +100,21 @@ const handleRegister = async () => {
             </div>
             <input
               v-model="password"
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               required
               minlength="8"
               placeholder="••••••••"
-              class="w-full pl-9 pr-3 py-2.5 bg-zinc-800/80 border border-zinc-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-100 placeholder-zinc-500 transition"
+              class="w-full pl-9 pr-10 py-2.5 bg-zinc-800/80 border border-zinc-700/80 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-zinc-100 placeholder-zinc-500 transition"
             />
+            <button
+              type="button"
+              @click="showPassword = !showPassword"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-400 hover:text-zinc-200 transition focus:outline-none cursor-pointer"
+              :aria-label="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <EyeOff v-if="showPassword" class="w-4 h-4" />
+              <Eye v-else class="w-4 h-4" />
+            </button>
           </div>
         </div>
 
