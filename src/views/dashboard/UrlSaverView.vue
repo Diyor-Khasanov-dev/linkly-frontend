@@ -11,6 +11,7 @@ import {
   Loader2,
   AlertCircle
 } from 'lucide-vue-next'
+import BaseSelect from '../../components/BaseSelect.vue'
 import { useLinks } from '../../composables/useLinks'
 
 interface SavedBookmark {
@@ -195,12 +196,10 @@ const filteredBookmarks = () => {
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label class="block text-xs font-semibold text-[var(--text-secondary)] mb-1">Category Tag</label>
-            <select
+            <BaseSelect
               v-model="newCategory"
-              class="w-full px-3 py-2.5 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-xl text-xs sm:text-sm text-[var(--text-primary)] focus:outline-none"
-            >
-              <option v-for="cat in categories" :key="cat" :value="cat">{{ cat }}</option>
-            </select>
+              :options="categories"
+            />
           </div>
 
           <div class="md:col-span-2">

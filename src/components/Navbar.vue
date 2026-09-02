@@ -30,7 +30,6 @@ const handleLogout = () => {
       <!-- Desktop Nav -->
       <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-[var(--text-secondary)]">
         <router-link to="/#shortener" class="hover:text-[var(--text-primary)] transition-colors">Shortener</router-link>
-        <router-link to="/#analyzer" class="hover:text-[var(--text-primary)] transition-colors">Analyzer</router-link>
         <router-link to="/#qr-generator" class="hover:text-[var(--text-primary)] transition-colors">QR Code</router-link>
         <router-link to="/#features" class="hover:text-[var(--text-primary)] transition-colors">Features</router-link>
         <router-link to="/#faq" class="hover:text-[var(--text-primary)] transition-colors">FAQ</router-link>
@@ -89,7 +88,6 @@ const handleLogout = () => {
     <!-- Mobile Navigation Dropdown -->
     <div v-if="mobileMenuOpen" class="md:hidden border-b border-[var(--border-color)] bg-[var(--bg-primary)] px-4 pt-2 pb-6 space-y-3">
       <router-link @click="mobileMenuOpen = false" to="/#shortener" class="block py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]">Shortener</router-link>
-      <router-link @click="mobileMenuOpen = false" to="/#analyzer" class="block py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]">Analyzer</router-link>
       <router-link @click="mobileMenuOpen = false" to="/#qr-generator" class="block py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]">QR Code</router-link>
       <router-link @click="mobileMenuOpen = false" to="/#features" class="block py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]">Features</router-link>
       <router-link @click="mobileMenuOpen = false" to="/#faq" class="block py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)]">FAQ</router-link>

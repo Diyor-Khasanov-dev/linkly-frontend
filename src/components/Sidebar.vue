@@ -8,7 +8,6 @@ import {
   QrCode,
   Clock,
   Timer,
-  BarChart3,
   User,
   LogOut,
   Menu,
@@ -50,11 +49,6 @@ const navigation = [
     name: 'Expiring QR Codes',
     href: '/dashboard/expiring-qr',
     icon: Timer,
-  },
-  {
-    name: 'Analytics',
-    href: '/dashboard/analytics',
-    icon: BarChart3,
   },
   {
     name: 'Profile',

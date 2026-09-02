@@ -49,7 +49,7 @@ const handleRegister = async () => {
           Create your account
         </h2>
         <p class="text-sm text-zinc-400">
-          Start shortening links, generating QRs, and analyzing clicks in seconds.
+          Start shortening links and generating QRs in seconds.
         </p>
       </div>
 

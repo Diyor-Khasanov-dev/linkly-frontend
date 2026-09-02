@@ -15,7 +15,7 @@ import { Link2, Github, ArrowUpRight } from 'lucide-vue-next'
             <span class="font-semibold text-lg">Linkly<span class="text-blue-500">.</span></span>
           </a>
           <p class="text-xs sm:text-sm max-w-sm text-[var(--text-secondary)] leading-relaxed">
-            Minimalist URL Shortener, Real-time Analytics, and Custom QR Code Generator. Built for speed, clarity, and precision.
+            Minimalist URL Shortener and Custom QR Code Generator. Built for speed, clarity, and precision.
           </p>
           <div class="flex items-center gap-3 pt-2">
             <a href="https://github.com/Diyor-Khasanov-dev/linkly-frontend" target="_blank" rel="noopener" class="p-2 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-color)] hover:text-[var(--text-primary)] transition">
@@ -29,7 +29,6 @@ import { Link2, Github, ArrowUpRight } from 'lucide-vue-next'
           <h3 class="text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] mb-3 sm:mb-4">Product</h3>
           <ul class="space-y-2 text-xs sm:text-sm">
             <li><a href="#shortener" class="hover:text-[var(--text-primary)] transition">URL Shortener</a></li>
-            <li><a href="#analyzer" class="hover:text-[var(--text-primary)] transition">Link Analytics</a></li>
             <li><a href="#qr-generator" class="hover:text-[var(--text-primary)] transition">QR Code Studio</a></li>
             <li><a href="#features" class="hover:text-[var(--text-primary)] transition">Custom Aliases</a></li>
           </ul>

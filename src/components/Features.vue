@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   Zap,
-  BarChart2,
+  Bookmark,
   QrCode,
   ShieldCheck,
   Globe,
@@ -16,9 +16,9 @@ const featuresList = [
     description: 'Powered by global edge network caching to ensure instant routing for every single visitor worldwide without delay.'
   },
   {
-    icon: BarChart2,
-    title: 'Granular Link Analytics',
-    description: 'Track real-time click counts, country origins, device breakdown, and traffic sources with complete privacy compliance.'
+    icon: Bookmark,
+    title: 'Workspace Link Saver',
+    description: 'Save, organize, and catalog essential web links into custom workspace collections with note attachments.'
   },
   {
     icon: QrCode,
