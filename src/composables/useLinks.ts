@@ -11,9 +11,7 @@ export interface ShortLink {
   userId?: string
   isEssential?: boolean
   clicks: number
-  expiresAt?: string | null
   maxClicks?: number | null
-  isExpired?: boolean
   lastAccessedAt?: string | null
   createdAt: string
   updatedAt: string
@@ -21,7 +19,6 @@ export interface ShortLink {
 
 export interface CreateLinkOptions {
   customAlias?: string
-  expiresAt?: string
   maxClicks?: number
 }
 
@@ -72,9 +69,6 @@ export function useLinks() {
       const bodyPayload: Record<string, any> = { url: url.trim() }
       if (opts.customAlias && opts.customAlias.trim()) {
         bodyPayload.customAlias = opts.customAlias.trim()
-      }
-      if (opts.expiresAt && opts.expiresAt.trim()) {
-        bodyPayload.expiresAt = opts.expiresAt.trim()
       }
       if (opts.maxClicks !== undefined && opts.maxClicks !== null && opts.maxClicks > 0) {
         bodyPayload.maxClicks = Number(opts.maxClicks)
