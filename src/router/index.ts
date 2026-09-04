@@ -12,8 +12,6 @@ import NotFoundView from '../views/NotFoundView.vue'
 import UrlShortenerView from '../views/dashboard/UrlShortenerView.vue'
 import UrlSaverView from '../views/dashboard/UrlSaverView.vue'
 import QrGeneratorView from '../views/dashboard/QrGeneratorView.vue'
-import ExpiringUrlView from '../views/dashboard/ExpiringUrlView.vue'
-import ExpiringQrView from '../views/dashboard/ExpiringQrView.vue'
 import ProfileView from '../views/dashboard/ProfileView.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -55,16 +53,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'qr-generator',
         name: 'DashboardQrGenerator',
         component: QrGeneratorView,
-      },
-      {
-        path: 'expiring-url',
-        name: 'DashboardExpiringUrl',
-        component: ExpiringUrlView,
-      },
-      {
-        path: 'expiring-qr',
-        name: 'DashboardExpiringQr',
-        component: ExpiringQrView,
       },
       {
         path: 'profile',

@@ -6,8 +6,6 @@ import {
   Link2,
   Bookmark,
   QrCode,
-  Clock,
-  Timer,
   User,
   LogOut,
   Menu,
@@ -39,16 +37,6 @@ const navigation = [
     name: 'QR Code Generator',
     href: '/dashboard/qr-generator',
     icon: QrCode,
-  },
-  {
-    name: 'Expiring URL',
-    href: '/dashboard/expiring-url',
-    icon: Clock,
-  },
-  {
-    name: 'Expiring QR Codes',
-    href: '/dashboard/expiring-qr',
-    icon: Timer,
   },
   {
     name: 'Profile',
