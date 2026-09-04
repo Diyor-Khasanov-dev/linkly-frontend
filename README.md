@@ -245,9 +245,3 @@ npm run preview
 - **State Management**: Prefer Vue 3 Composables (`useAuth`, `useLinks`) for shared reactive state over heavy external state stores.
 - **Styling**: Utilize Tailwind v4 utility classes and CSS variables in `style.css` for consistent theme tokens.
 - **TypeScript**: Ensure strict typing for all API request payloads, response interfaces, and component props.
-
----
-
-## 📄 License
-
-Distributed under the [MIT License](LICENSE).
