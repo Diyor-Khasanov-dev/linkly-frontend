@@ -6,12 +6,14 @@ import HomeView from '../views/HomeView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import LoginView from '../views/LoginView.vue'
 import DashboardView from '../views/DashboardView.vue'
+import PublicCardView from '../views/PublicCardView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 
 // Dashboard Sub-Views
 import UrlShortenerView from '../views/dashboard/UrlShortenerView.vue'
 import UrlSaverView from '../views/dashboard/UrlSaverView.vue'
 import QrGeneratorView from '../views/dashboard/QrGeneratorView.vue'
+import DigitalCardView from '../views/dashboard/DigitalCardView.vue'
 import ProfileView from '../views/dashboard/ProfileView.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -29,6 +31,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/login',
     name: 'Login',
     component: LoginView,
+  },
+  {
+    path: '/card/:slug?',
+    name: 'PublicCard',
+    component: PublicCardView,
+  },
+  {
+    path: '/c/:slug?',
+    name: 'PublicCardShort',
+    component: PublicCardView,
   },
   {
     path: '/dashboard',
@@ -53,6 +65,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'qr-generator',
         name: 'DashboardQrGenerator',
         component: QrGeneratorView,
+      },
+      {
+        path: 'card',
+        name: 'DashboardDigitalCard',
+        component: DigitalCardView,
       },
       {
         path: 'profile',

@@ -6,6 +6,7 @@ import {
   Link2,
   Bookmark,
   QrCode,
+  Contact,
   User,
   LogOut,
   Menu,
@@ -37,6 +38,12 @@ const navigation = [
     name: 'QR Code Generator',
     href: '/dashboard/qr-generator',
     icon: QrCode,
+  },
+  {
+    name: 'Digital Business Card',
+    href: '/dashboard/card',
+    icon: Contact,
+    badge: 'New'
   },
   {
     name: 'Profile',
