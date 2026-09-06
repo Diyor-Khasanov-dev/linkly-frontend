@@ -15,7 +15,7 @@ import {
 } from 'lucide-vue-next'
 import { useLinks, type ShortLink } from '../../composables/useLinks'
 
-const { createShortLink, fetchUserLinks, deleteShortLink, isLoading, linksList } = useLinks()
+const { createShortLink, fetchUserLinks, deleteShortLink, isLoading, isRenderingBackend, linksList } = useLinks()
 
 const originalUrl = ref('')
 const customAlias = ref('')
@@ -59,7 +59,7 @@ const handleCreateShortUrl = async () => {
     setTimeout(() => {
       successMsg.value = ''
     }, 3000)
-  } else {
+  } else if (!result.isRenderingBackend) {
     errorMsg.value = result.error || 'Failed to shorten link.'
   }
 }
@@ -106,7 +106,12 @@ const formatDate = (dateStr?: string) => {
     </div>
 
     <!-- Feedback messages -->
-    <div v-if="errorMsg" class="p-3 bg-red-950/30 border border-red-800 text-red-400 rounded-xl text-xs flex items-center gap-2">
+    <div v-if="isLoading || isFetching || isRenderingBackend" class="p-3 bg-blue-950/30 border border-blue-800 text-blue-300 rounded-xl text-xs flex items-center gap-2">
+      <Loader2 class="w-4 h-4 text-blue-400 animate-spin shrink-0" />
+      <span>Backend server is rendering / starting up. Please wait...</span>
+    </div>
+
+    <div v-else-if="errorMsg" class="p-3 bg-red-950/30 border border-red-800 text-red-400 rounded-xl text-xs flex items-center gap-2">
       <AlertCircle class="w-4 h-4 shrink-0" />
       <span>{{ errorMsg }}</span>
     </div>
