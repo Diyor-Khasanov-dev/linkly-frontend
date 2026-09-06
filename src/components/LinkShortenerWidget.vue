@@ -17,7 +17,7 @@ import {
 } from 'lucide-vue-next'
 import { useLinks } from '../composables/useLinks'
 
-const { createShortLink, getBackendQrCodeUrl, isLoading } = useLinks()
+const { createShortLink, getBackendQrCodeUrl, isLoading, isRenderingBackend } = useLinks()
 
 const longUrl = ref('')
 const customAlias = ref('')
@@ -71,7 +71,7 @@ const handleShorten = async () => {
       setTimeout(() => (copied.value = false), 2000)
     }
     generateQRCode()
-  } else {
+  } else if (!result.isRenderingBackend) {
     errorMsg.value = result.error || 'Failed to shorten URL.'
   }
 }
@@ -251,7 +251,12 @@ const downloadQrCode = (format: 'png' | 'svg') => {
           </div>
         </form>
 
-        <p v-if="errorMsg" class="text-xs text-red-500 mt-1 font-medium bg-red-950/20 p-2.5 rounded-lg border border-red-900/50 flex items-center gap-2">
+        <div v-if="isLoading || isRenderingBackend" class="p-3 bg-blue-950/30 border border-blue-800 text-blue-300 rounded-xl text-xs flex items-center gap-2 mt-2">
+          <Loader2 class="w-4 h-4 text-blue-400 animate-spin shrink-0" />
+          <span>Backend server is rendering / starting up. Please wait...</span>
+        </div>
+
+        <p v-else-if="errorMsg" class="text-xs text-red-500 mt-1 font-medium bg-red-950/20 p-2.5 rounded-lg border border-red-900/50 flex items-center gap-2">
           <span>{{ errorMsg }}</span>
         </p>
 

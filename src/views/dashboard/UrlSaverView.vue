@@ -27,7 +27,7 @@ interface SavedBookmark {
 
 const STORAGE_KEY = 'linkly_saved_bookmarks_meta'
 
-const { createShortLink, deleteShortLink, fetchUserLinks, linksList, isLoading: isApiLoading } = useLinks()
+const { createShortLink, deleteShortLink, fetchUserLinks, linksList, isLoading: isApiLoading, isRenderingBackend } = useLinks()
 
 const newTitle = ref('')
 const newUrl = ref('')
@@ -114,7 +114,7 @@ const handleAddBookmark = async () => {
     newUrl.value = ''
     newNotes.value = ''
     await syncSavedBookmarks()
-  } else {
+  } else if (!result.isRenderingBackend) {
     errorMsg.value = result.error || 'Failed to save URL to backend.'
   }
 }
@@ -213,7 +213,12 @@ const filteredBookmarks = () => {
           </div>
         </div>
 
-        <p v-if="errorMsg" class="text-xs text-red-500 font-medium bg-red-950/20 p-2.5 rounded-lg border border-red-900/50 flex items-center gap-2">
+        <div v-if="isApiLoading || isFetching || isRenderingBackend" class="p-3 bg-blue-950/30 border border-blue-800 text-blue-300 rounded-xl text-xs flex items-center gap-2">
+          <Loader2 class="w-4 h-4 text-blue-400 animate-spin shrink-0" />
+          <span>Backend server is rendering / starting up. Please wait...</span>
+        </div>
+
+        <p v-else-if="errorMsg" class="text-xs text-red-500 font-medium bg-red-950/20 p-2.5 rounded-lg border border-red-900/50 flex items-center gap-2">
           <AlertCircle class="w-4 h-4 text-red-400" />
           <span>{{ errorMsg }}</span>
         </p>

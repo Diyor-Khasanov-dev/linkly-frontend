@@ -22,6 +22,7 @@ export interface AuthResponse {
   success: boolean
   message?: string
   error?: string
+  isRenderingBackend?: boolean
   user?: User
   accessToken?: string
 }
@@ -105,7 +106,8 @@ export function useAuth() {
     } catch (err: any) {
       return {
         success: false,
-        error: err.message || 'Network error occurred during registration.',
+        isRenderingBackend: true,
+        error: 'Server is starting up (cold start). Please wait...',
       }
     } finally {
       isLoading.value = false
@@ -148,7 +150,8 @@ export function useAuth() {
     } catch (err: any) {
       return {
         success: false,
-        error: err.message || 'Network error during login.',
+        isRenderingBackend: true,
+        error: 'Server is starting up (cold start). Please wait...',
       }
     } finally {
       isLoading.value = false
@@ -194,7 +197,8 @@ export function useAuth() {
     } catch (err: any) {
       return {
         success: false,
-        error: err.message || 'Network error fetching user profile.',
+        isRenderingBackend: true,
+        error: 'Server is starting up (cold start). Please wait...',
       }
     } finally {
       isLoading.value = false
@@ -268,7 +272,8 @@ export function useAuth() {
     } catch (err: any) {
       return {
         success: false,
-        error: err.message || 'Network error updating user profile.',
+        isRenderingBackend: true,
+        error: 'Server is starting up (cold start). Please wait...',
       }
     } finally {
       isLoading.value = false

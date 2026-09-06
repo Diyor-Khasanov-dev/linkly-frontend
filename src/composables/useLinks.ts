@@ -26,6 +26,7 @@ export interface CreateLinkResponse {
   success: boolean
   link?: ShortLink
   error?: string
+  isRenderingBackend?: boolean
 }
 
 export interface FetchLinksResponse {
@@ -33,13 +34,17 @@ export interface FetchLinksResponse {
   links?: ShortLink[]
   total?: number
   error?: string
+  isRenderingBackend?: boolean
 }
 
 export interface DeleteLinkResponse {
   success: boolean
   message?: string
   error?: string
+  isRenderingBackend?: boolean
 }
+
+const isRenderingBackend = ref(false)
 
 export function useLinks() {
   const { accessToken } = useAuth()
@@ -51,6 +56,7 @@ export function useLinks() {
     options?: string | CreateLinkOptions
   ): Promise<CreateLinkResponse> => {
     isLoading.value = true
+    isRenderingBackend.value = false
     try {
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
@@ -94,9 +100,11 @@ export function useLinks() {
         link: data as ShortLink,
       }
     } catch (err: any) {
+      isRenderingBackend.value = true
       return {
         success: false,
-        error: err.message || 'Network error occurred while shortening URL.',
+        isRenderingBackend: true,
+        error: 'Backend is starting up (cold start). Rendering in progress...',
       }
     } finally {
       isLoading.value = false
@@ -109,6 +117,7 @@ export function useLinks() {
     }
 
     isLoading.value = true
+    isRenderingBackend.value = false
     try {
       const response = await fetch(`${API_BASE_URL}/api/links`, {
         method: 'GET',
@@ -135,9 +144,11 @@ export function useLinks() {
         total: data.total || fetchedLinks.length,
       }
     } catch (err: any) {
+      isRenderingBackend.value = true
       return {
         success: false,
-        error: err.message || 'Network error while fetching links.',
+        isRenderingBackend: true,
+        error: 'Backend is starting up (cold start). Rendering in progress...',
       }
     } finally {
       isLoading.value = false
@@ -150,6 +161,7 @@ export function useLinks() {
     }
 
     isLoading.value = true
+    isRenderingBackend.value = false
     try {
       const response = await fetch(`${API_BASE_URL}/api/links/${encodeURIComponent(shortCode)}`, {
         method: 'DELETE',
@@ -174,9 +186,11 @@ export function useLinks() {
         message: data.message || 'Link deleted successfully.',
       }
     } catch (err: any) {
+      isRenderingBackend.value = true
       return {
         success: false,
-        error: err.message || 'Network error while deleting link.',
+        isRenderingBackend: true,
+        error: 'Backend is starting up (cold start). Rendering in progress...',
       }
     } finally {
       isLoading.value = false
@@ -197,6 +211,7 @@ export function useLinks() {
 
   return {
     isLoading,
+    isRenderingBackend,
     linksList,
     createShortLink,
     fetchUserLinks,
